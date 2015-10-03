@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StreetArtlas{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'bundles/jahllerartlas/css/*' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div id="navigation">
+            <button id="createPiece" type="button" class="btn btn-warning">
+                <i class="fa fa-lg fa-paint-brush"></i> Create Piece
+            </button>
+            <button type="button" class="btn btn-warning">
+                <i class="fa fa-lg fa-github-alt"></i>
+            </button>
+        </div>
+
+        <div id="map"></div>
+    </div>
+
+    {{ include('JahllerArtlasBundle:Piece:new.html.twig', { 'form': form }) }}
+{% endblock %}
+
+{% block dynamic_javascripts %}
+    <script type="text/javascript">
+        function addMarker() {
+        {% for piece in pieces %}
+            var contentString{{ loop.index }} = '<div id="content">' +
+                '<img src="{{ asset('bundles/jahllerartlas/images/pieces/' ~ piece['fileName'] ) }}" height="300" alt="Example" />' +
+                '</div>';
+
+            var infowindow{{ loop.index }} = new google.maps.InfoWindow({
+                content: contentString{{ loop.index }}
+            });
+
+            var marker{{ loop.index }} = new google.maps.Marker({
+                position: {lat: {{ piece.lat }}, lng: {{ piece.lng }}},
+                map: map,
+                title: 'Piece {{ loop.index }}'
+            });
+
+            marker{{ loop.index }}.addListener('click', function() {
+                infowindow{{ loop.index }}.open(map, marker{{ loop.index }});
+            });
+        {% endfor %}
+        }
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@JahllerArtlasBundle/Resources/public/js/*' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTy4gSGEtYMLZiUQ0M04-oWTm5746BFOI&callback=initMap" async defer></script>
+{% endblock %}

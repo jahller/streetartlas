@@ -1,0 +1,30 @@
+{% extends 'modal.html.twig' %}
+
+{% block modal_id %}createPieceModal{% endblock %}
+
+{% block modal_content %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+            Create new piece
+        </h4>
+    </div>
+    <form action="{{ path('jahller_artlas_homepage') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+        <div class="modal-body">
+            <div class="form-group">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.imageFile) }}
+                {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            {{ form_widget(form.save, { 'attr': {'class': 'btn btn-primary'} }) }}
+        </div>
+        {{ form_rest(form) }}
+    </form>
+{% endblock %}

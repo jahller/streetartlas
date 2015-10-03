@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <div id="globalMessages">
+            {% for type, messages in app.session.flashbag.all %}
+                {% if type in ['success', 'notice', 'error'] %}
+                    {% for message in messages %}
+                        <div class="alert fade in alert-{{ type|replace({'info': 'notice', 'error': 'danger'}) }}" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        {% if message is iterable %}
+                            <ul>
+                            {% for text in message %}
+                                <li>{{ text }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            {{ message }}
+                        {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+        {% block dynamic_javascripts %}{% endblock %}
+    </body>
+</html>

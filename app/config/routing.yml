@@ -1,0 +1,3 @@
+jahller_artlas:
+    resource: "@JahllerArtlasBundle/Resources/config/routing.yml"
+    prefix:   /

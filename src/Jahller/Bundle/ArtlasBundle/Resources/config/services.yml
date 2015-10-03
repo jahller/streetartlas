@@ -1,0 +1,13 @@
+services:
+    jahller.artlas.image.manager:
+        class: Jahller\Bundle\ArtlasBundle\Service\ImageManager
+        arguments:
+          - @logger
+          - %file_path_pieces%
+        tags:
+          - { name: monolog.logger, channel: jahller }
+
+    jahller.artlas.manager.piece:
+        class: Jahller\Bundle\ArtlasBundle\Document\Manager\PieceManager
+        arguments:
+            - @doctrine.odm.mongodb.document_manager

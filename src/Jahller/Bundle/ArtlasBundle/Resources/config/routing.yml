@@ -1,0 +1,11 @@
+jahller_artlas_homepage:
+    path:     /
+    defaults: { _controller: JahllerArtlasBundle:Default:index }
+
+jahller_artlas_info:
+    path:     /info
+    defaults: { _controller: JahllerArtlasBundle:Default:info }
+
+jahller_artlas_piece_new:
+    path:     /piece/new
+    defaults: { _controller: JahllerArtlasBundle:Piece:new }
