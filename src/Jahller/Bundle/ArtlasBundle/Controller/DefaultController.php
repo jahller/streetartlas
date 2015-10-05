@@ -8,6 +8,7 @@ use Jahller\Bundle\ArtlasBundle\Event\PieceAddAttachmentEvent;
 use Jahller\Bundle\ArtlasBundle\Event\PieceEvents;
 use Jahller\Bundle\ArtlasBundle\Form\PieceType;
 use Jahller\Bundle\AttachmentBundle\Document\Attachment;
+use Jahller\Bundle\AttachmentBundle\Document\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,17 +36,19 @@ class DefaultController extends Controller
             /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile */
             $uploadedFile = $piece->getImageFile();
 
-            /** @var Attachment $attachment */
-            $attachment = $this->get('jahller.attachment.service')->guessClass($uploadedFile);
-            $attachment->setFile($uploadedFile);
+            /** @var Image $image */
+            $image = $this->get('jahller.attachment.service')->guessClass($uploadedFile);
+            $image = $this->get('jahller.attachment.service.image')->processExifData($image, $uploadedFile);
 
-            $attachment->processFile();
-            $this->get('logger')->notice('Path ' . $attachment->getPath() . ' - Name ' . $attachment->getName(), array('jahller'));
+            /**
+             * @todo add image processing to AttachmentBundle\ImageService
+             */
+            $image->processFile($uploadedFile);
 
             /** @var $eventDispatcher EventDispatcherInterface */
             $eventDispatcher = $this->get('event_dispatcher');
 
-            $addAttachmentEvent = new PieceAddAttachmentEvent($piece, $attachment);
+            $addAttachmentEvent = new PieceAddAttachmentEvent($piece, $image);
             $eventDispatcher->dispatch(PieceEvents::PIECE_PRE_ADD_ATTACHMENT, $addAttachmentEvent);
             $eventDispatcher->dispatch(PieceEvents::PIECE_ADD_ATTACHMENT, $addAttachmentEvent);
             $eventDispatcher->dispatch(PieceEvents::PIECE_POST_ADD_ATTACHMENT, $addAttachmentEvent);
@@ -54,7 +57,7 @@ class DefaultController extends Controller
         }
 
         return $this->render('JahllerArtlasBundle:Default:index.html.twig', array(
-            'pieces' => $this->get('jahller.artlas.image.manager')->getPieces(),
+            'pieces' => $this->get('jahller.artlas.repository.piece')->findAll(),
             'form' => $form->createView()
         ));
     }

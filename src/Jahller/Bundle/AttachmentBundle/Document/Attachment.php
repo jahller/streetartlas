@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- *
  * Class Attachment
  * @package Onemedia\AttachmentBundle\Document
  */
@@ -202,8 +201,13 @@ abstract class Attachment implements AttachmentInterface
         $this->replacedPath = null;
     }
 
-    public function processFile()
+    /**
+     * @param UploadedFile $file
+     */
+    public function processFile(UploadedFile $file)
     {
+        $this->file = $file;
+
         if (null === $this->file) {
             return;
         }
@@ -214,6 +218,7 @@ abstract class Attachment implements AttachmentInterface
         if ($this->file instanceof File) {
             $this->name = $this->getName();
         }
+
         $this->replacedPath = $this->path;
         $this->size = $this->file->getSize();
         $this->extension = $this->file->getClientOriginalExtension();

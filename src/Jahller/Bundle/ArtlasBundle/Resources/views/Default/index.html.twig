@@ -31,15 +31,15 @@
         function addMarker() {
         {% for piece in pieces %}
             var contentString{{ loop.index }} = '<div id="content">' +
-                '<img src="{{ asset('bundles/jahllerartlas/images/pieces/' ~ piece['fileName'] ) }}" height="300" alt="Example" />' +
-                '</div>';
+                    '<img src="{{ asset(path('jahller_artlas_piece_image_preview', {'pieceId': piece.id, 'size': 'lightbox'})) }}" alt="Example" />' +
+                    '</div>';
 
             var infowindow{{ loop.index }} = new google.maps.InfoWindow({
                 content: contentString{{ loop.index }}
             });
 
             var marker{{ loop.index }} = new google.maps.Marker({
-                position: {lat: {{ piece.lat }}, lng: {{ piece.lng }}},
+                position: {lat: {{ piece.attachment.exifData.latitude }}, lng: {{ piece.attachment.exifData.longitude }}},
                 map: map,
                 title: 'Piece {{ loop.index }}'
             });

@@ -29,14 +29,15 @@ class Piece
     protected $tags;
 
     /**
+     * @MongoDB\EmbedOne(targetDocument="Jahller\Bundle\AttachmentBundle\Document\Image")
+     */
+    protected $attachment;
+
+    /**
+     * Dummy variable to handle file upload
      * @var
      */
     protected $imageFile;
-
-    /**
-     * @MongoDB\ReferenceOne(targetDocument="Jahller\Bundle\AttachmentBundle\Document\Attachment", cascade={"all"})
-     */
-    protected $attachment;
 
     /**
      * General constructor

@@ -2,6 +2,7 @@
 
 namespace Jahller\Bundle\AttachmentBundle\Document;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
@@ -15,9 +16,9 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 class File extends Attachment
 {
 
-    public function processFile()
+    public function processFile(UploadedFile $file)
     {
-        parent::processFile();
+        parent::processFile($file);
     }
 
     public function getPreviewPath()

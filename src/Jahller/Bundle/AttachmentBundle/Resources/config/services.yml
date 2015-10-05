@@ -9,6 +9,9 @@ services:
     jahller.attachment.service:
         class: Jahller\Bundle\AttachmentBundle\Service\AttachmentService
 
+    jahller.attachment.service.image:
+        class: Jahller\Bundle\AttachmentBundle\Service\ImageService
+
     jahller.doctrine.listener.post_remove:
         class: Jahller\Bundle\AttachmentBundle\Listener\PostRemoveListener
         arguments:

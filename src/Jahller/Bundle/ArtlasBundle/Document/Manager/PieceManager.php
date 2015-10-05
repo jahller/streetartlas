@@ -7,8 +7,14 @@ use Jahller\Bundle\ArtlasBundle\Document\Piece;
 
 class PieceManager
 {
+    /**
+     * @var \Doctrine\ODM\MongoDB\DocumentManager
+     */
     protected $documentManager;
 
+    /**
+     * @param DocumentManager $documentManager
+     */
     public function __construct(DocumentManager $documentManager)
     {
         $this->documentManager = $documentManager;

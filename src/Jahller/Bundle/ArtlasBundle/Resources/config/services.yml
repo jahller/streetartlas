@@ -12,6 +12,11 @@ services:
         arguments:
             - @doctrine.odm.mongodb.document_manager
 
+    jahller.artlas.repository.piece:
+        class: Jahller\Bundle\ArtlasBundle\Document\Repository\PieceRepository
+        arguments:
+            - @doctrine.odm.mongodb.document_manager
+
     jahller.artlas.listener.attachment:
         class: Jahller\Bundle\ArtlasBundle\Listener\AttachmentListener
         tags:

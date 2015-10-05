@@ -9,3 +9,7 @@ jahller_artlas_info:
 jahller_artlas_piece_new:
     path:     /piece/new
     defaults: { _controller: JahllerArtlasBundle:Piece:new }
+
+jahller_artlas_piece_image_preview:
+    path:     /piece/image/{pieceId}/size/{size}
+    defaults: { _controller: JahllerArtlasBundle:Image:getAttachmentPreview }
