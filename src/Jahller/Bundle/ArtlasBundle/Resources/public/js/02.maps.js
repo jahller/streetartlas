@@ -19,5 +19,7 @@ $(document).ready(function() {
 function init() {
   $('#createPiece').click(function() {
     $('#createPieceModal').modal('show');
-  })
+  });
+
+  $('[data-toggle="tooltip"]').tooltip()
 }

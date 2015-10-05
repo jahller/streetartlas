@@ -1,0 +1,17 @@
+services:
+    jahller.attachment.manager:
+        class: Jahller\Bundle\AttachmentBundle\Document\Manager\AttachmentManager
+        arguments:
+            - @knp_gaufrette.filesystem_map
+            - @jahller.attachment.service
+            - %attachment_sizes%
+
+    jahller.attachment.service:
+        class: Jahller\Bundle\AttachmentBundle\Service\AttachmentService
+
+    jahller.doctrine.listener.post_remove:
+        class: Jahller\Bundle\AttachmentBundle\Listener\PostRemoveListener
+        arguments:
+            - @jahller.attachment.manager
+        tags:
+            - { name: doctrine_mongodb.odm.event_listener, event: postRemove }

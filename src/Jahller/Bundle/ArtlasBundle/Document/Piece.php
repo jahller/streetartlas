@@ -3,13 +3,13 @@
 namespace Jahller\Bundle\ArtlasBundle\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Jahller\Bundle\AttachmentBundle\Document\Attachment;
+use Jahller\Bundle\AttachmentBundle\Document\AttachmentInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * @MongoDB\Document
- * @Vich\Uploadable
  */
 class Piece
 {
@@ -24,24 +24,19 @@ class Piece
     protected $title;
 
     /**
-     * @Vich\UploadableField(mapping="piece_image", fileNameProperty="imageName")
-     */
-    private $imageFile;
-
-    /**
-     * @MongoDB\String
-     */
-    private $imageName;
-
-    /**
-     * @MongoDB\ReferenceMany(targetDocument="Jahller\Bundle\ArtlasBundle\Document\Tag")
+     * @MongoDB\ReferenceMany(targetDocument="Jahller\Bundle\ArtlasBundle\Document\Tag", cascade={"all"})
      */
     protected $tags;
 
     /**
-     * @MongoDB\Date
+     * @var
      */
-    private $updatedAt;
+    protected $imageFile;
+
+    /**
+     * @MongoDB\ReferenceOne(targetDocument="Jahller\Bundle\AttachmentBundle\Document\Attachment", cascade={"all"})
+     */
+    protected $attachment;
 
     /**
      * General constructor
@@ -76,56 +71,6 @@ class Piece
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
-     * of 'UploadedFile' is injected into this setter to trigger the  update. If this
-     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
-     * must be able to accept an instance of 'File' as the bundle will inject one here
-     * during Doctrine hydration.
-     *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $image
-     * @return $this
-     */
-    public function setImageFile(File $image = null)
-    {
-        $this->imageFile = $image;
-
-        if ($image) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new \DateTime('now');
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return File
-     */
-    public function getImageFile()
-    {
-        return $this->imageFile;
-    }
-
-    /**
-     * @param string $imageName
-     * @return $this
-     */
-    public function setImageName($imageName)
-    {
-        $this->imageName = $imageName;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getImageName()
-    {
-        return $this->imageName;
     }
 
     /**
@@ -170,4 +115,43 @@ class Piece
     {
         return $this->tags->contains($tag);
     }
+
+    /**
+     * @param mixed $imageFile
+     * @return $this
+     */
+    public function setImageFile($imageFile)
+    {
+        $this->imageFile = $imageFile;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * @param Attachment $attachment
+     * @return $this
+     */
+    public function setAttachment(Attachment $attachment)
+    {
+        $this->attachment = $attachment;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttachment()
+    {
+        return $this->attachment;
+    }
+
 }

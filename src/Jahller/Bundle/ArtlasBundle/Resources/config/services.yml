@@ -11,3 +11,11 @@ services:
         class: Jahller\Bundle\ArtlasBundle\Document\Manager\PieceManager
         arguments:
             - @doctrine.odm.mongodb.document_manager
+
+    jahller.artlas.listener.attachment:
+        class: Jahller\Bundle\ArtlasBundle\Listener\AttachmentListener
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+            - @jahller.attachment.manager
+            - @jahller.artlas.manager.piece

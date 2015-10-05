@@ -7,7 +7,6 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-    file_path_pieces: '/../Resources/public/images/pieces/'
 
 framework:
     #esi:             ~
@@ -50,27 +49,6 @@ assetic:
         #yui_css:
         #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
 
-# Doctrine Configuration
-#doctrine:
-#    dbal:
-#        driver:   pdo_mysql
-#        host:     "%database_host%"
-#        port:     "%database_port%"
-#        dbname:   "%database_name%"
-#        user:     "%database_user%"
-#        password: "%database_password%"
-#        charset:  UTF8
-        # if using pdo_sqlite as your database driver:
-        #   1. add the path in parameters.yml
-        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
-        #   2. Uncomment database_path in parameters.yml.dist
-        #   3. Uncomment next line:
-        #     path:     "%database_path%"
-#    orm:
-#        auto_generate_proxy_classes: "%kernel.debug%"
-#        naming_strategy: doctrine.orm.naming_strategy.underscore
-#        auto_mapping: true
-
 doctrine_mongodb:
     connections:
         default:
@@ -92,9 +70,39 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-vich_uploader:
-    db_driver: mongodb # mongodb, orm, propel, phpcr
-    mappings:
-        piece_image:
-            uri_prefix:         /piece/images
-            upload_destination: %kernel.root_dir%/../web/images/pieces
+knp_gaufrette:
+    adapters:
+        uploads_local:
+            local:
+                directory: %uploads_local_directory%
+        uploads_s3:
+            amazon_s3:
+                amazon_s3_id: onemedia.storage.s3
+                bucket_name: %uploads_s3_bucket_name%
+                options:
+                    region: %uploads_s3_region%
+    filesystems:
+        uploads:
+            adapter: %uploads_adapter%
+    stream_wrapper: ~
+
+# Doctrine Configuration
+#doctrine:
+#    dbal:
+#        driver:   pdo_mysql
+#        host:     "%database_host%"
+#        port:     "%database_port%"
+#        dbname:   "%database_name%"
+#        user:     "%database_user%"
+#        password: "%database_password%"
+#        charset:  UTF8
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #     path:     "%database_path%"
+#    orm:
+#        auto_generate_proxy_classes: "%kernel.debug%"
+#        naming_strategy: doctrine.orm.naming_strategy.underscore
+#        auto_mapping: true

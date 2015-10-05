@@ -4,8 +4,12 @@ namespace Jahller\Bundle\ArtlasBundle\Controller;
 
 use Jahller\Bundle\ArtlasBundle\Document\Manager\PieceManager;
 use Jahller\Bundle\ArtlasBundle\Document\Piece;
+use Jahller\Bundle\ArtlasBundle\Event\PieceAddAttachmentEvent;
+use Jahller\Bundle\ArtlasBundle\Event\PieceEvents;
 use Jahller\Bundle\ArtlasBundle\Form\PieceType;
+use Jahller\Bundle\AttachmentBundle\Document\Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
@@ -27,6 +31,24 @@ class DefaultController extends Controller
              */
             $pieceManager = $this->get('jahller.artlas.manager.piece');
             $pieceManager->persist($piece);
+
+            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile */
+            $uploadedFile = $piece->getImageFile();
+
+            /** @var Attachment $attachment */
+            $attachment = $this->get('jahller.attachment.service')->guessClass($uploadedFile);
+            $attachment->setFile($uploadedFile);
+
+            $attachment->processFile();
+            $this->get('logger')->notice('Path ' . $attachment->getPath() . ' - Name ' . $attachment->getName(), array('jahller'));
+
+            /** @var $eventDispatcher EventDispatcherInterface */
+            $eventDispatcher = $this->get('event_dispatcher');
+
+            $addAttachmentEvent = new PieceAddAttachmentEvent($piece, $attachment);
+            $eventDispatcher->dispatch(PieceEvents::PIECE_PRE_ADD_ATTACHMENT, $addAttachmentEvent);
+            $eventDispatcher->dispatch(PieceEvents::PIECE_ADD_ATTACHMENT, $addAttachmentEvent);
+            $eventDispatcher->dispatch(PieceEvents::PIECE_POST_ADD_ATTACHMENT, $addAttachmentEvent);
 
             $this->addFlash('success', 'Piece was successfully created');
         }
