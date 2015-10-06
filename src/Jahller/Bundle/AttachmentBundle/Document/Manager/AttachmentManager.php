@@ -89,7 +89,11 @@ class AttachmentManager
     public function getPreview(Attachment $attachment, $size)
     {
         try {
-            return $this->generatePreview($attachment, $size);
+            if ('original' == $size) {
+                return $this->getOriginal($attachment);
+            } else {
+                return $this->generatePreview($attachment, $size);
+            }
         } catch (InvalidSizeException $e) {
             return $this->getPreview($attachment, 'icon');
         } catch (\RuntimeException $e) {
@@ -140,6 +144,16 @@ class AttachmentManager
         }
 
         throw new InvalidSizeException();
+    }
+
+    public function getOriginal(Attachment $attachment)
+    {
+        $filePath = sprintf('gaufrette://uploads/%s', $attachment->getPreviewPath());
+
+        /* If file already exists deliver it */
+        if (file_exists($filePath)) {
+            return file_get_contents($filePath);
+        }
     }
 
     public function isSizeValid($size)

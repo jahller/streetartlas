@@ -30,8 +30,9 @@
     <script type="text/javascript">
         function addMarker() {
         {% for piece in pieces %}
+            {% if piece.attachment.exifData is defined %}
             var contentString{{ loop.index }} = '<div id="content">' +
-                    '<img src="{{ asset(path('jahller_artlas_piece_image_preview', {'pieceId': piece.id, 'size': 'lightbox'})) }}" alt="Example" />' +
+                    '<img src="{{ asset(path('jahller_artlas_piece_image_preview', {'pieceId': piece.id, 'size': 'original'})) }}" height="400" alt="Example" />' +
                     '</div>';
 
             var infowindow{{ loop.index }} = new google.maps.InfoWindow({
@@ -47,6 +48,7 @@
             marker{{ loop.index }}.addListener('click', function() {
                 infowindow{{ loop.index }}.open(map, marker{{ loop.index }});
             });
+            {% endif %}
         {% endfor %}
         }
     </script>
