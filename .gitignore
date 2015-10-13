@@ -8,9 +8,9 @@
 /bin/
 /composer.phar
 /vendor/
-/web/bundles/
-/web/images/
-/web/coverage.html/
-/web/css/
-/web/js/
-/.idea/
+/web/bundles/*
+/web/images/*
+/web/coverage.html/*
+/web/css/*
+/web/js/*
+/.idea/*

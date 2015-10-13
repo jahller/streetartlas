@@ -3,33 +3,33 @@
 namespace Jahller\Bundle\AttachmentBundle\Listener;
 
 use Doctrine\ODM\MongoDB\Event\LifecycleEventArgs;
-use Jahller\Bundle\AttachmentBundle\Document\Attachment;
-use Jahller\Bundle\AttachmentBundle\Document\Manager\AttachmentManager;
+use Jahller\Bundle\AttachmentBundle\Document\Image;
+use Jahller\Bundle\AttachmentBundle\Document\Manager\ImageManager;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class PostRemoveListener
 {
-    protected $attachmentManager;
-    protected $attachmentSizes;
+    protected $imageManager;
+    protected $logger;
 
-    public function __construct(AttachmentManager $attachmentManager)
+    public function __construct(ImageManager $imageManager, Logger $logger)
     {
-        $this->attachmentManager = $attachmentManager;
+        $this->imageManager = $imageManager;
+        $this->logger = $logger;
     }
 
     public function postRemove(LifecycleEventArgs $eventArgs)
     {
-        if ($eventArgs->getDocument() instanceof Attachment) {
+        if ($eventArgs->getDocument() instanceof Image) {
 
-            /* @var Attachment $attachment */
-            $attachment = $eventArgs->getDocument();
+            /* @var Image $image */
+            $image = $eventArgs->getDocument();
 
             try {
-                $this->attachmentManager->delete($attachment, 'uploads');
+                $this->imageManager->delete($image, 'uploads');
             } catch (FileException $e) {
-                /**
-                 * @todo log exception
-                 */
+                $this->logger->error('PostRemoveListener: Error while deleting image ' . $image->getFileName() . ' Error: ' . $e->getMessage());
             }
         }
     }

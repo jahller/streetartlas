@@ -4,9 +4,8 @@ namespace Jahller\Bundle\ArtlasBundle\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use Jahller\Bundle\AttachmentBundle\Document\Attachment;
-use Jahller\Bundle\AttachmentBundle\Document\AttachmentInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\Validator\Constraints as Assert;
+use Jahller\Bundle\AttachmentBundle\Document\Image;
 
 /**
  * @MongoDB\Document
@@ -19,11 +18,6 @@ class Piece
     protected $id;
 
     /**
-     * @MongoDB\String
-     */
-    protected $title;
-
-    /**
      * @MongoDB\ReferenceMany(targetDocument="Jahller\Bundle\ArtlasBundle\Document\Tag", cascade={"all"})
      */
     protected $tags;
@@ -31,11 +25,14 @@ class Piece
     /**
      * @MongoDB\EmbedOne(targetDocument="Jahller\Bundle\AttachmentBundle\Document\Image")
      */
-    protected $attachment;
+    protected $image;
 
     /**
      * Dummy variable to handle file upload
-     * @var
+
+     * @Assert\Image(
+     *   maxSize = "50M"
+     * )
      */
     protected $imageFile;
 
@@ -53,25 +50,6 @@ class Piece
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $title
-     * @return $this
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
@@ -137,12 +115,12 @@ class Piece
     }
 
     /**
-     * @param Attachment $attachment
+     * @param Image $image
      * @return $this
      */
-    public function setAttachment(Attachment $attachment)
+    public function setImage(Image $image)
     {
-        $this->attachment = $attachment;
+        $this->image = $image;
 
         return $this;
     }
@@ -150,9 +128,9 @@ class Piece
     /**
      * @return mixed
      */
-    public function getAttachment()
+    public function getImage()
     {
-        return $this->attachment;
+        return $this->image;
     }
 
 }

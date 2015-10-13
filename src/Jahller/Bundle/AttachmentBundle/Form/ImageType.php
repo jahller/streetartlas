@@ -4,9 +4,9 @@ namespace Jahller\Bundle\AttachmentBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AttachmentType extends AbstractType
+class ImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -16,14 +16,14 @@ class AttachmentType extends AbstractType
 
     public function getName()
     {
-        return 'attachment_form';
+        return 'image_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Onemedia\AttachmentBundle\Document\Attachment',
+                'data_class' => 'Onemedia\AttachmentBundle\Document\Image',
                 'csrf_protection' => false,
             )
         );

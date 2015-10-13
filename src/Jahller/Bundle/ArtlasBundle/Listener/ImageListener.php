@@ -9,33 +9,33 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 use Jahller\Bundle\ArtlasBundle\Event\PieceEvents;
 use Jahller\Bundle\ArtlasBundle\Document\Manager\PieceManager;
-use Jahller\Bundle\ArtlasBundle\Event\PieceAddAttachmentEvent;
-use Jahller\Bundle\ArtlasBundle\Event\PieceDeleteAttachmentEvent;
-use Jahller\Bundle\AttachmentBundle\Document\Manager\AttachmentManager;
+use Jahller\Bundle\ArtlasBundle\Event\PieceAddImageEvent;
+use Jahller\Bundle\ArtlasBundle\Event\PieceDeleteImageEvent;
+use Jahller\Bundle\AttachmentBundle\Document\Manager\ImageManager;
 
-class AttachmentListener implements EventSubscriberInterface
+class ImageListener implements EventSubscriberInterface
 {
-    protected $attachmentManager;
+    protected $imageManager;
     protected $pieceManager;
 
-    public function __construct(AttachmentManager $attachmentManager, PieceManager $pieceManager)
+    public function __construct(ImageManager $imageManager, PieceManager $pieceManager)
     {
-        $this->attachmentManager = $attachmentManager;
+        $this->imageManager = $imageManager;
         $this->pieceManager = $pieceManager;
     }
 
     /**
-     * On pre add event write attachment file into file system
+     * On pre add event write image file into file system
      *
-     * @param PieceAddAttachmentEvent $event
+     * @param PieceAddImageEvent $event
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function onPreAddAttachment(PieceAddAttachmentEvent $event)
+    public function onPreAddImage(PieceAddImageEvent $event)
     {
-        $attachment = $event->getAttachment();
+        $image = $event->getImage();
 
         try {
-            $this->attachmentManager->write($attachment, 'uploads');
+            $this->imageManager->write($image, 'uploads');
         } catch (FileException $e) {
             /**
              * @todo log exception
@@ -45,18 +45,18 @@ class AttachmentListener implements EventSubscriberInterface
     }
 
     /**
-     * On add event add attachment to tracker item's attachments collection
+     * On add event add image to piece
      *
-     * @param PieceAddAttachmentEvent $event
+     * @param PieceAddImageEvent $event
      * @throws \Doctrine\ODM\MongoDB\MongoDBException
      */
-    public function onAddAttachment(PieceAddAttachmentEvent $event)
+    public function onAddImage(PieceAddImageEvent $event)
     {
         $piece = $event->getPiece();
-        $attachment = $event->getAttachment();
+        $image = $event->getImage();
 
         try {
-            $piece->setAttachment($attachment);
+            $piece->setImage($image);
             $this->pieceManager->update($piece);
         } catch (MongoDBException $e) {
             /**
@@ -67,17 +67,17 @@ class AttachmentListener implements EventSubscriberInterface
     }
 
     /**
-     * On delete event remove attachment from tracker item's attachments collection
+     * On delete event remove image from piece
      *
-     * @param PieceDeleteAttachmentEvent $event
+     * @param PieceDeleteImageEvent $event
      * @throws \Doctrine\ODM\MongoDB\MongoDBException
      */
-    public function onDeleteAttachment(PieceDeleteAttachmentEvent $event)
+    public function onDeleteImage(PieceDeleteImageEvent $event)
     {
         $piece = $event->getPiece();
 
         try {
-            $piece->setAttachment(null);
+            $piece->setImage(null);
             $this->pieceManager->update($piece);
         } catch (MongoDBException $e) {
             /**
@@ -90,9 +90,9 @@ class AttachmentListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            PieceEvents::PIECE_PRE_ADD_ATTACHMENT => 'onPreAddAttachment',
-            PieceEvents::PIECE_ADD_ATTACHMENT => 'onAddAttachment',
-            PieceEvents::PIECE_DELETE_ATTACHMENT => 'onDeleteAttachment',
+            PieceEvents::PIECE_PRE_ADD_IMAGE => 'onPreAddImage',
+            PieceEvents::PIECE_ADD_IMAGE => 'onAddImage',
+            PieceEvents::PIECE_DELETE_IMAGE => 'onDeleteImage',
         );
     }
 }

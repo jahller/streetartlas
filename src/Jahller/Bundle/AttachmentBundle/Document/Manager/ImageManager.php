@@ -4,70 +4,76 @@ namespace Jahller\Bundle\AttachmentBundle\Document\Manager;
 
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
 use Gaufrette\Exception\FileNotFound;
-use Jahller\Bundle\AttachmentBundle\Document\Attachment;
+use Jahller\Bundle\AttachmentBundle\Document\Image;
 use Jahller\Bundle\AttachmentBundle\Exception\InvalidSizeException;
-use Jahller\Bundle\AttachmentBundle\Service\AttachmentService;
+use Jahller\Bundle\AttachmentBundle\Service\ImageService;
+use Symfony\Bridge\Monolog\Logger;
 
-class AttachmentManager
+class ImageManager
 {
     protected $filesystemMap;
-    protected $attachmentService;
+    protected $imageService;
     protected $sizes;
+    protected $logger;
 
-    public function __construct(FilesystemMap $filesystemMap, AttachmentService $attachmentService, array $sizes)
+    public function __construct(FilesystemMap $filesystemMap, ImageService $imageService, Logger $logger, array $sizes)
     {
         $this->filesystemMap = $filesystemMap;
-        $this->attachmentService = $attachmentService;
+        $this->imageService = $imageService;
+        $this->logger = $logger;
         $this->sizes = $sizes;
     }
 
-    public function write(Attachment $attachment, $filesystemKey)
+    public function write(Image $image, $filesystemKey)
     {
-        if (null === $attachment->getPath()) {
-            throw new \RuntimeException('No path defined. Did you process the file calling Attachment::processFile() before persisting?');
+        if (null === $image->getPath()) {
+            throw new \RuntimeException('No path defined. Did you process the file calling Image::processFile() before persisting?');
         }
 
         $filesystem = $this->filesystemMap->get($filesystemKey);
 
         try {
-            $filesystem->write($attachment->getPath(), file_get_contents($attachment->getFile()->getPathname()), true);
+            $filesystem->write($image->getPath(), file_get_contents($image->getFile()->getPathname()), true);
         } catch (\RuntimeException $e) {
-            // @ToDo What can we do if writing the file fails?
+            $this->logger->error('ImageManager: Writing the file failed for path ' . $image->getPath() . ' Error: ' . $e->getMessage());
+
             throw $e;
         }
 
-        $attachment->setFile(null);
+        $image->setFile(null);
 
-        if (null !== $attachment->getReplacedPath()) {
-            $this->deleteByPath($attachment->getReplacedPath(), $filesystemKey);
-            $attachment->resetReplacedPath();
+        if (null !== $image->getReplacedPath()) {
+            $this->deleteByPath($image->getReplacedPath(), $filesystemKey);
+            $image->resetReplacedPath();
         }
     }
 
-    public function read(Attachment $attachment, $filesystemKey)
+    public function read(Image $image, $filesystemKey)
     {
         $filesystem = $this->filesystemMap->get($filesystemKey);
 
-        return $filesystem->read($attachment->getPath());
+        return $filesystem->read($image->getPath());
     }
 
-    public function copy(Attachment $old, Attachment $new, $filesystemKey)
+    public function copy(Image $old, Image $new, $filesystemKey)
     {
         $filesystem = $this->filesystemMap->get($filesystemKey);
 
         try {
             $filesystem->write($new->getPath(), $this->read($old, $filesystemKey), true);
         } catch (\RuntimeException $e) {
-            // @ToDo What can we do if writing the file fails?
+            $this->logger->error('ImageManager: Copying the file failed for path ' . $new->getPath() . ' Error: ' . $e->getMessage());
+
+            throw $e;
         }
     }
 
-    public function delete(Attachment $attachment, $filesystemKey)
+    public function delete(Image $image, $filesystemKey)
     {
-        $this->deleteByPath($attachment->getPath(), $filesystemKey);
+        $this->deleteByPath($image->getPath(), $filesystemKey);
 
         foreach ($this->sizes as $key => $size) {
-            $tmp = preg_split('/\./', $attachment->getPath());
+            $tmp = preg_split('/\./', $image->getPath());
             $uniqueFileName = $tmp[0];
             $extension = $tmp[1];
             $filePath = sprintf('%s.%s.png', $uniqueFileName, $key, $extension);
@@ -86,16 +92,16 @@ class AttachmentManager
         }
     }
 
-    public function getPreview(Attachment $attachment, $size)
+    public function getPreview(Image $image, $size)
     {
         try {
             if ('original' == $size) {
-                return $this->getOriginal($attachment);
+                return $this->getOriginal($image);
             } else {
-                return $this->generatePreview($attachment, $size);
+                return $this->generatePreview($image, $size);
             }
         } catch (InvalidSizeException $e) {
-            return $this->getPreview($attachment, 'icon');
+            return $this->getPreview($image, 'icon');
         } catch (\RuntimeException $e) {
             throw $e;
         }
@@ -109,20 +115,20 @@ class AttachmentManager
     /**
      * Deliver or generate preview file
      *
-     * @param Attachment $attachment
+     * @param Image $image
      * @param $size
      * @return string
      * @throws \Exception
      * @throws \RuntimeException
      * @throws \Jahller\Bundle\AttachmentBundle\Exception\InvalidSizeException
      */
-    public function generatePreview(Attachment $attachment, $size)
+    public function generatePreview(Image $image, $size)
     {
         if ($this->isSizeValid($size)) {
 
-            $newFilename = sprintf('%s.%s.png', $attachment->getFileName(), $size);
+            $newFilename = sprintf('%s.%s.png', $image->getFileName(), $size);
             $sizeDimensions = $this->sizes[$size];
-            $filePath = sprintf('gaufrette://uploads/%s', $attachment->getPreviewPath());
+            $filePath = sprintf('gaufrette://uploads/%s', $image->getPreviewPath());
             $filesystem = $this->filesystemMap->get('uploads');
 
             /* If file already exists deliver it */
@@ -132,7 +138,7 @@ class AttachmentManager
 
             /* If preview file doesn't exist generate it */
             try {
-                $resizedFile = $this->attachmentService->resize($filePath, $sizeDimensions);
+                $resizedFile = $this->imageService->resize($filePath, $sizeDimensions);
                 $filesystem->write($newFilename, $resizedFile, true);
 
                 return $this->deliverPreview($newFilename);
@@ -146,9 +152,9 @@ class AttachmentManager
         throw new InvalidSizeException();
     }
 
-    public function getOriginal(Attachment $attachment)
+    public function getOriginal(Image $image)
     {
-        $filePath = sprintf('gaufrette://uploads/%s', $attachment->getPreviewPath());
+        $filePath = sprintf('gaufrette://uploads/%s', $image->getPreviewPath());
 
         /* If file already exists deliver it */
         if (file_exists($filePath)) {

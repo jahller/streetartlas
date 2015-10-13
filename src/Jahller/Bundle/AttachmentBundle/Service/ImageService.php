@@ -4,10 +4,71 @@ namespace Jahller\Bundle\AttachmentBundle\Service;
 
 use Jahller\Bundle\AttachmentBundle\Document\ExifData;
 use Jahller\Bundle\AttachmentBundle\Document\Image;
+use Monolog\Logger;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImageService
 {
+    protected $logger;
+
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * Resize file delivered by file system using Imagick
+     *
+     * @param $imagePath
+     * @param $size
+     * @return string The function returns the read data or false on failure
+     */
+    public function resize($imagePath, $size)
+    {
+        try {
+            $tempImage = file_get_contents($imagePath);
+            $name = tempnam('/tmp', sha1(uniqid(mt_rand(), true)));
+            file_put_contents($name, $tempImage);
+            $resizedFile = imagecreatefromjpeg($name);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        $sourceImageWidth = imagesx($resizedFile);
+        $sourceImageHeight = imagesy($resizedFile);
+
+        if ($sourceImageWidth < $size['x'] && $sourceImageHeight < $size['y']) {
+            return file_get_contents($imagePath);
+        }
+
+        if ($sourceImageWidth > $size['x'] && $sourceImageHeight > $size['y']) {
+            $finalImageHeight = $sourceImageHeight / ($sourceImageWidth / $size['x']);
+            $finalImageWidth = $sourceImageWidth / ($sourceImageHeight / $size['y']);
+        }
+
+        if ($sourceImageWidth > $size['x']) {
+            $finalImageHeight = $sourceImageHeight / ($sourceImageWidth / $size['x']);
+            $finalImageWidth = $size['x'];
+        }
+
+        if ($sourceImageHeight > $size['y']) {
+            $finalImageWidth = $sourceImageWidth / ($sourceImageHeight / $size['y']);
+            $finalImageHeight = $size['y'];
+        }
+
+        $gdImage = imagecreatetruecolor($finalImageWidth, $finalImageHeight);
+        imagecopyresampled(
+            $gdImage, $resizedFile,
+            0, 0, 0, 0,
+            $finalImageWidth, $finalImageHeight,
+            $sourceImageWidth, $sourceImageHeight
+        );
+        imagejpeg($gdImage, $name, 90);
+
+        return file_get_contents($name);
+    }
+
     /**
      * Process Uploaded File and retrieve Latitude and Longitude from image EXIF data
      *

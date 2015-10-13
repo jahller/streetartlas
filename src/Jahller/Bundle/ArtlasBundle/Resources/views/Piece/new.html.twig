@@ -12,19 +12,38 @@
     <form action="{{ path('jahller_artlas_homepage') }}" method="post" {{ form_enctype(form) }}>
         {{ form_errors(form) }}
         <div class="modal-body">
-            <div class="form-group">
-                {{ form_label(form.title) }}
-                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="form-group">
+            <div class="form-group {% if form.imageFile.vars.errors|length %}has-error has-feedback{% endif %}">
                 {{ form_label(form.imageFile) }}
                 {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                {% if form.imageFile.vars.errors|length %}
+                    <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                    <span id="{{ form.imageFile.vars.id }}" class="sr-only">(error)</span>
+                    <span class="help-block">{{ form_errors(form.imageFile) }}</span>
+                {% endif %}
             </div>
+
+            <ul id="tag-fields-list" data-prototype="{{ form_widget(form.tags.vars.prototype)|e }}">
+                {{ form_widget(form.tags) }}
+                {% for tagField in form.tags %}
+                    <li>
+                        {{ form_errors(tagField) }}
+                        {{ form_widget(tagField) }}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <a href="#" id="add-another-tag">Add tag</a>
         </div>
+
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             {{ form_widget(form.save, { 'attr': {'class': 'btn btn-primary'} }) }}
         </div>
         {{ form_rest(form) }}
     </form>
+
+    <script type="text/javascript">
+        // keep track of how many tag fields have been rendered
+        var tagCount = '{{ form.tags|length }}';
+    </script>
 {% endblock %}

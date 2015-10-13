@@ -1,5 +1,5 @@
 jahller_artlas_homepage:
-    path:     /
+    path:     /home
     defaults: { _controller: JahllerArtlasBundle:Default:index }
 
 jahller_artlas_info:
@@ -10,6 +10,12 @@ jahller_artlas_piece_new:
     path:     /piece/new
     defaults: { _controller: JahllerArtlasBundle:Piece:new }
 
+jahller_artlas_piece_show:
+    path:     /piece/show/{id}
+    defaults: { _controller: JahllerArtlasBundle:Piece:show }
+    options:
+        expose: true
+
 jahller_artlas_piece_image_preview:
-    path:     /piece/image/{pieceId}/size/{size}
-    defaults: { _controller: JahllerArtlasBundle:Image:getAttachmentPreview }
+    path:     /piece/image/{id}/size/{size}
+    defaults: { _controller: JahllerArtlasBundle:Image:getImagePreview }

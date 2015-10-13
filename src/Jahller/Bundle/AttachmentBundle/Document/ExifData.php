@@ -8,7 +8,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
  * Class ExifData
- * @package Onemedia\AttachmentBundle\Document
+ * @package Jahller\Bundle\AttachmentBundle\Document
  *
  * @MongoDB\EmbeddedDocument
  */

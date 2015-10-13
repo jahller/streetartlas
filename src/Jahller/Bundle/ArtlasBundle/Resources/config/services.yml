@@ -17,10 +17,10 @@ services:
         arguments:
             - @doctrine.odm.mongodb.document_manager
 
-    jahller.artlas.listener.attachment:
-        class: Jahller\Bundle\ArtlasBundle\Listener\AttachmentListener
+    jahller.artlas.listener.image:
+        class: Jahller\Bundle\ArtlasBundle\Listener\ImageListener
         tags:
             - { name: kernel.event_subscriber }
         arguments:
-            - @jahller.attachment.manager
+            - @jahller.attachment.manager.image
             - @jahller.artlas.manager.piece

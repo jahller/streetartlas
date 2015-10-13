@@ -1,0 +1,10 @@
+{% block modal_content %}
+    <div>
+        <img src="{{ asset(path('jahller_artlas_piece_image_preview', {'id': piece.id, 'size': 'lightbox'})) }}" height="400" alt="Example" />
+        <div>
+            {% for tag in piece.tags %}
+                <span class="badge">{{ tag.title }}</span>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

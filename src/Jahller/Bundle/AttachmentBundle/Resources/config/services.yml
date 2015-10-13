@@ -1,20 +1,21 @@
 services:
-    jahller.attachment.manager:
-        class: Jahller\Bundle\AttachmentBundle\Document\Manager\AttachmentManager
+    jahller.attachment.manager.image:
+        class: Jahller\Bundle\AttachmentBundle\Document\Manager\ImageManager
         arguments:
             - @knp_gaufrette.filesystem_map
-            - @jahller.attachment.service
-            - %attachment_sizes%
-
-    jahller.attachment.service:
-        class: Jahller\Bundle\AttachmentBundle\Service\AttachmentService
+            - @jahller.attachment.service.image
+            - @logger
+            - %image_sizes%
 
     jahller.attachment.service.image:
         class: Jahller\Bundle\AttachmentBundle\Service\ImageService
+        arguments:
+            - @logger
 
     jahller.doctrine.listener.post_remove:
         class: Jahller\Bundle\AttachmentBundle\Listener\PostRemoveListener
         arguments:
-            - @jahller.attachment.manager
+            - @jahller.attachment.manager.image
+            - @logger
         tags:
             - { name: doctrine_mongodb.odm.event_listener, event: postRemove }

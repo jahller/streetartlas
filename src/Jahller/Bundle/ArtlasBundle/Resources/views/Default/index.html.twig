@@ -24,32 +24,32 @@
     </div>
 
     {{ include('JahllerArtlasBundle:Piece:new.html.twig', { 'form': form }) }}
+    {{ include('JahllerArtlasBundle:Piece:show_modal.html.twig') }}
 {% endblock %}
 
 {% block dynamic_javascripts %}
     <script type="text/javascript">
+        {% if pieceFormHasErrors %}
+            $('#createPieceModal').modal('show');
+        {% endif %}
+
         function addMarker() {
-        {% for piece in pieces %}
-            {% if piece.attachment.exifData is defined %}
-            var contentString{{ loop.index }} = '<div id="content">' +
-                    '<img src="{{ asset(path('jahller_artlas_piece_image_preview', {'pieceId': piece.id, 'size': 'original'})) }}" height="400" alt="Example" />' +
-                    '</div>';
+            {% for piece in pieces %}
+                {% if piece.image.exifData is defined %}
+                    var marker{{ loop.index }} = new google.maps.Marker({
+                        position: {lat: {{ piece.image.exifData.latitude }}, lng: {{ piece.image.exifData.longitude }}},
+                        map: map,
+                        title: 'Piece {{ loop.index }}',
+                        {% image '@JahllerArtlasBundle/Resources/public/images/marker_red.png' %}
+                            icon: '{{ asset_url }}'
+                        {% endimage %}
+                    });
 
-            var infowindow{{ loop.index }} = new google.maps.InfoWindow({
-                content: contentString{{ loop.index }}
-            });
-
-            var marker{{ loop.index }} = new google.maps.Marker({
-                position: {lat: {{ piece.attachment.exifData.latitude }}, lng: {{ piece.attachment.exifData.longitude }}},
-                map: map,
-                title: 'Piece {{ loop.index }}'
-            });
-
-            marker{{ loop.index }}.addListener('click', function() {
-                infowindow{{ loop.index }}.open(map, marker{{ loop.index }});
-            });
-            {% endif %}
-        {% endfor %}
+                    marker{{ loop.index }}.addListener('click', function() {
+                        openPieceDialog('{{ piece.id }}');
+                    });
+                {% endif %}
+            {% endfor %}
         }
     </script>
 {% endblock %}
@@ -60,4 +60,6 @@
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTy4gSGEtYMLZiUQ0M04-oWTm5746BFOI&callback=initMap" async defer></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 {% endblock %}

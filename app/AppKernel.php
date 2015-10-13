@@ -19,7 +19,8 @@ class AppKernel extends Kernel
             new Jahller\Bundle\ArtlasBundle\JahllerArtlasBundle(),
             new Jahller\Bundle\AttachmentBundle\AttachmentBundle(),
             new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
-            new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle()
+            new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

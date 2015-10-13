@@ -5,7 +5,7 @@ namespace Jahller\Bundle\ArtlasBundle\Document\Repository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 
-class PieceRepository extends DocumentRepository
+class TagRepository extends DocumentRepository
 {
     /**
      * @var \Doctrine\ODM\MongoDB\DocumentManager
@@ -22,7 +22,7 @@ class PieceRepository extends DocumentRepository
     function __construct(DocumentManager $documentManager)
     {
         $this->documentManager = $documentManager;
-        $this->repository = $this->documentManager->getRepository('JahllerArtlasBundle:Piece');
+        $this->repository = $this->documentManager->getRepository('JahllerArtlasBundle:Tag');
     }
 
     public function find($id)
@@ -36,16 +36,5 @@ class PieceRepository extends DocumentRepository
     public function findAll()
     {
         return $this->repository->findAll();
-    }
-
-    /**
-     * Find all tags in a certain location
-     *
-     * @param $latitude
-     * @param $longitude
-     */
-    public function findAllInLocation($latitude, $longitude)
-    {
-
     }
 }

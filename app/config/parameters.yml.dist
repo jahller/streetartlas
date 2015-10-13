@@ -1,19 +1,34 @@
-# This file is a "template" of what your parameters.yml file should look like
-# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
-# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+# This file is auto-generated during the composer install
 parameters:
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
-    # You should uncomment this if you want use pdo_sqlite
-    # database_path: "%kernel.root_dir%/data.db3"
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: symfony
+    database_user: root
+    database_password: null
 
-    mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
 
-    # A secret key that's used to generate certain security-related tokens
-    secret:            ThisTokenIsNotSoSecretChangeIt
+    secret: 012a4977eb54d9d216cac5fdbecb7036a2d8ed10
+
+    uploads_adapter: uploads_local # uploads_local|uploads_s3
+    uploads_local_directory: %kernel.root_dir%/../web/images/pieces
+    uploads_s3_key: ~
+    uploads_s3_secret: ~
+    uploads_s3_region: ~ # REGION-KEY.amazonaws.com
+    uploads_s3_bucket_name: default
+
+    image_sizes:
+        icon:
+            x: 24
+            y: 24
+        thumb:
+            x: 165
+            y: 165
+        lightbox:
+            x: 680
+            y: 500
+
+    file_path_pieces: '/../Resources/public/images/pieces/'
