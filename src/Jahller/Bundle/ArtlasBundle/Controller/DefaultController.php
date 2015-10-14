@@ -56,7 +56,7 @@ class DefaultController extends Controller
         }
 
         return $this->render('JahllerArtlasBundle:Default:index.html.twig', array(
-            'pieces' => $this->get('jahller.artlas.repository.piece')->findAll(),
+            'pieces' => $this->get('jahller.artlas.repository.piece')->findActive(),
             'form' => $form->createView(),
             'pieceFormHasErrors' => ($form->getErrors(true)->count() > 0)
         ));

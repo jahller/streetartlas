@@ -16,6 +16,18 @@ jahller_artlas_piece_show:
     options:
         expose: true
 
+jahller_artlas_piece_delete:
+    path:     /piece/delete/{id}
+    defaults: { _controller: JahllerArtlasBundle:Piece:delete }
+
+jahller_artlas_piece_toggle_activate:
+    path:     /piece/toggle_activate/{id}
+    defaults: { _controller: JahllerArtlasBundle:Piece:toggleActivate }
+
 jahller_artlas_piece_image_preview:
     path:     /piece/image/{id}/size/{size}
     defaults: { _controller: JahllerArtlasBundle:Image:getImagePreview }
+
+jahller_artlas_backend_index:
+    path:     /backend
+    defaults: { _controller: JahllerArtlasBundle:Backend:index }

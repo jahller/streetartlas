@@ -18,6 +18,11 @@ class Piece
     protected $id;
 
     /**
+     * @MongoDB\Boolean
+     */
+    protected $active;
+
+    /**
      * @MongoDB\ReferenceMany(targetDocument="Jahller\Bundle\ArtlasBundle\Document\Tag", cascade={"all"})
      */
     protected $tags;
@@ -50,6 +55,37 @@ class Piece
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $active
+     * @return $this
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * Toggle active state
+     */
+    public function toggleActive()
+    {
+        if ($this->active) {
+            $this->setActive(false);
+        } else {
+            $this->setActive(true);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isActive()
+    {
+        return $this->active;
     }
 
     /**

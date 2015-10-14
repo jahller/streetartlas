@@ -25,9 +25,23 @@ class PieceRepository extends DocumentRepository
         $this->repository = $this->documentManager->getRepository('JahllerArtlasBundle:Piece');
     }
 
+    /**
+     * @param object|string $id
+     * @return object
+     */
     public function find($id)
     {
         return $this->repository->find($id);
+    }
+
+    /**
+     * @return array
+     */
+    public function findActive()
+    {
+        return $this->repository->findBy(array(
+            'active' => true
+        ));
     }
 
     /**

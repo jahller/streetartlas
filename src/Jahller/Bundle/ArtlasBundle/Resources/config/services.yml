@@ -10,12 +10,12 @@ services:
     jahller.artlas.manager.piece:
         class: Jahller\Bundle\ArtlasBundle\Document\Manager\PieceManager
         arguments:
-            - @doctrine.odm.mongodb.document_manager
+            - @doctrine_mongodb.odm.document_manager
 
     jahller.artlas.repository.piece:
         class: Jahller\Bundle\ArtlasBundle\Document\Repository\PieceRepository
         arguments:
-            - @doctrine.odm.mongodb.document_manager
+            - @doctrine_mongodb.odm.document_manager
 
     jahller.artlas.listener.image:
         class: Jahller\Bundle\ArtlasBundle\Listener\ImageListener

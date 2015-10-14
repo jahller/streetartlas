@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StreetArtlas{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'bundles/jahllerartlas/css/*' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div id="backend">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Active</th>
+                    <th>Image file</th>
+                    <th>Image Latitude</th>
+                    <th>Image Longitude</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for piece in pieces %}
+                    <tr>
+                        <td>{{ piece.id }}</td>
+                        <td>
+                            {% if piece.active %}
+                                <i class="fa fa-check"></i>
+                            {% else %}
+                                <i class="fa fa-times"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ piece.image.path }}
+                            <img src="{{ asset(path('jahller_artlas_piece_image_preview', {'id': piece.id, 'size': 'thumb'})) }}" alt="Example" />
+                        </td>
+                        <td>{{ piece.image.exifData.latitude }}</td>
+                        <td>{{ piece.image.exifData.longitude }}</td>
+                        <td>
+                            <a href="{{ path('jahller_artlas_piece_delete', {'id': piece.id}) }}" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Delete Piece">
+                                <i class="fa fa-lg fa-trash"></i>
+                            </a>
+                            <button id="editPiece" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Edit Piece">
+                                <i class="fa fa-lg fa-pencil"></i>
+                            </button>
+                            {% if piece.active %}
+                                <a href="{{ path('jahller_artlas_piece_toggle_activate', {'id': piece.id}) }}" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Deactivate Piece">
+                                    <i class="fa fa-lg fa-toggle-on"></i>
+                                </a>
+                            {% else %}
+                                <a href="{{ path('jahller_artlas_piece_toggle_activate', {'id': piece.id}) }}" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Activate Piece">
+                                    <i class="fa fa-lg fa-toggle-off"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@JahllerArtlasBundle/Resources/public/js/*' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
