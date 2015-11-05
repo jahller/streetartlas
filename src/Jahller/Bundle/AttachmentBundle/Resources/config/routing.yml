@@ -1,0 +1,5 @@
+jahller_piece_image_preview:
+    path:     /piece/image/{id}/size/{size}
+    defaults: { _controller: AttachmentBundle:Image:getImagePreview }
+    options:
+        expose: true

@@ -1,0 +1,63 @@
+{% block modal_content %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+            Update piece
+        </h4>
+    </div>
+    <form action="{{ path('jahller_artlas_piece_update', {'id': piece.id}) }}" method="post" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+        <div class="modal-body">
+            <img src="{{ asset(path('jahller_piece_image_preview', {'id': piece.id, 'size': 'lightbox'})) }}" alt="Example" />
+
+            <ul id="tag-fields-list" data-prototype="{{ form_widget(form.tags.vars.prototype)|e }}">
+                {% for tagField in form.tags %}
+                    <li>
+                        {{ form_row(tagField) }}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <a href="#" id="add-another-tag">Add tag</a>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            {{ form_widget(form.save, { 'attr': {'class': 'btn btn-primary'} }) }}
+        </div>
+        {{ form_rest(form) }}
+    </form>
+
+    <script type="text/javascript">
+        // keep track of how many tag fields have been rendered
+        var tagCount = '{{ form.tags|length }}';
+
+        $(document).ready(function() {
+            // Get the ul that holds the collection of tags
+            var collectionHolder = $('#tag-fields-list');
+            // add a delete link to all of the existing tag form li elements
+            collectionHolder.find('li').each(function() {
+                addTagFormDeleteLink($(this));
+            });
+
+            $('#add-another-tag').click(function(e) {
+                e.preventDefault();
+
+                var tagList = $('#tag-fields-list');
+                console.log('####', tagList.length);
+
+                // grab the prototype template
+                var newWidget = tagList.attr('data-prototype');
+                // replace the "__name__" used in the id and name of the prototype
+                // with a number that's unique to your tags
+                // end name attribute looks like name="contact[tags][2]"
+                newWidget = newWidget.replace(/__name__/g, tagCount);
+                tagCount++;
+
+                // create a new list element and add it to the list
+                var newLi = $('<li></li>').html(newWidget);
+                newLi.appendTo(tagList);
+            });
+        })
+    </script>
+{% endblock %}
