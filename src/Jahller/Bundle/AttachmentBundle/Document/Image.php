@@ -6,17 +6,20 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Type;
 
 /**
- * Class Image
- * @package Jahller\Bundle\AttachmentBundle\Document
- *
  * @MongoDB\EmbeddedDocument
+ * @ExclusionPolicy("all")
  */
 class Image
 {
     /**
      * @MongoDB\Id(strategy="auto")
+     * @Expose
+     * @Type("string")
      */
     protected $id;
 
@@ -30,26 +33,36 @@ class Image
 
     /**
      * @MongoDB\String
+     * @Expose
+     * @Type("string")
      */
     protected $path;
 
     /**
      * @MongoDB\String
+     * @Expose
+     * @Type("string")
      */
     protected $name;
 
     /**
      * @MongoDB\Int
+     * @Expose
+     * @Type("integer")
      */
     protected $size;
 
     /**
      * @MongoDB\String
+     * @Expose
+     * @Type("string")
      */
     protected $extension;
 
     /**
      * @MongoDB\String
+     * @Expose
+     * @Type("string")
      */
     protected $mimeType;
 
@@ -62,6 +75,8 @@ class Image
 
     /**
      * @MongoDB\EmbedOne(targetDocument="Jahller\Bundle\AttachmentBundle\Document\ExifData")
+     * @Expose
+     * @Type("Jahller\Bundle\AttachmentBundle\Document\ExifData")
      */
     protected $exifData;
 

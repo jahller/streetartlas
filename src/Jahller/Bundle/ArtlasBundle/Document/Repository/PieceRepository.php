@@ -4,6 +4,8 @@ namespace Jahller\Bundle\ArtlasBundle\Document\Repository;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
+use Jahller\Bundle\ArtlasBundle\Document\Piece;
+use Symfony\Component\HttpFoundation\File\File;
 
 class PieceRepository extends DocumentRepository
 {

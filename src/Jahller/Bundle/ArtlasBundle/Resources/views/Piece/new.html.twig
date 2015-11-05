@@ -23,7 +23,6 @@
             </div>
 
             <ul id="tag-fields-list" data-prototype="{{ form_widget(form.tags.vars.prototype)|e }}">
-                {{ form_widget(form.tags) }}
                 {% for tagField in form.tags %}
                     <li>
                         {{ form_errors(tagField) }}

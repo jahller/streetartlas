@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}StreetArtlas{% endblock %}
+{% block title %}StreetArtlas Backend{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -10,62 +10,68 @@
 {% endblock %}
 
 {% block body %}
-    <div id="backend">
-        <table class="table table-striped">
+    <div id="backend" ng-app="backend" ng-cloak>
+
+        <table class="table table-striped" ng-controller="BackendController">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Active</th>
-                    <th>Image file</th>
-                    <th>Image Latitude</th>
-                    <th>Image Longitude</th>
-                    <th>Actions</th>
-                </tr>
+            <tr>
+                <th>ID</th>
+                <th>Active</th>
+                <th>Image Latitude</th>
+                <th>Image Longitude</th>
+                <th>Tags</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
             </thead>
             <tbody>
-                {% for piece in pieces %}
-                    <tr>
-                        <td>{{ piece.id }}</td>
-                        <td>
-                            {% if piece.active %}
-                                <i class="fa fa-check"></i>
-                            {% else %}
-                                <i class="fa fa-times"></i>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {{ piece.image.path }}
-                            <img src="{{ asset(path('jahller_artlas_piece_image_preview', {'id': piece.id, 'size': 'thumb'})) }}" alt="Example" />
-                        </td>
-                        <td>{{ piece.image.exifData.latitude }}</td>
-                        <td>{{ piece.image.exifData.longitude }}</td>
-                        <td>
-                            <a href="{{ path('jahller_artlas_piece_delete', {'id': piece.id}) }}" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Delete Piece">
-                                <i class="fa fa-lg fa-trash"></i>
-                            </a>
-                            <button id="editPiece" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Edit Piece">
-                                <i class="fa fa-lg fa-pencil"></i>
-                            </button>
-                            {% if piece.active %}
-                                <a href="{{ path('jahller_artlas_piece_toggle_activate', {'id': piece.id}) }}" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Deactivate Piece">
-                                    <i class="fa fa-lg fa-toggle-on"></i>
-                                </a>
-                            {% else %}
-                                <a href="{{ path('jahller_artlas_piece_toggle_activate', {'id': piece.id}) }}" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Activate Piece">
-                                    <i class="fa fa-lg fa-toggle-off"></i>
-                                </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
+            <tr ng-repeat="(key, piece) in pieceManager.pieces | orderBy:orderAttribute:orderDirection">
+                <td>{[ piece.id ]}</td>
+                <td>
+                    <i class="fa fa-check" ng-class="{'fa-check': piece.active, 'fa-times': !piece.active}"></i>
+                </td>
+                <td>{[ piece.image.exif_data.latitude ]}</td>
+                <td>{[ piece.image.exif_data.longitude ]}</td>
+                <td>
+                    <span ng-repeat="(tagKey, tag) in piece.tags" class="badge">
+                        {[ tag.title ]}
+                    </span>
+                </td>
+                <td>
+                    <img src="{[ actions.getImageURL(piece.id, 'icon') ]}" alt="{[ key ]}" />
+                </td>
+                <td>
+                    <button ng-click="actions.deletePiece(piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Delete Piece">
+                        <i class="fa fa-lg fa-trash"></i>
+                    </button>
+                    <button ng-click="actions.showPieceModal(piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Edit Piece">
+                        <i class="fa fa-lg fa-pencil"></i>
+                    </button>
+                    <button ng-click="actions.togglePieceActive(piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Activate/Deactivate Piece">
+                        <i ng-class="{'fa-toggle-on': piece.active, 'fa-toggle-off': !piece.active}" class="fa fa-lg"></i>
+                    </button>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
+
+    {{ include('JahllerArtlasBundle:Piece:update_modal.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% javascripts '@JahllerArtlasBundle/Resources/public/js/*' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+    {% javascripts 'bundles/jahllerartlas/js/src/model/repository/piece-repository.js'
+                   'bundles/jahllerartlas/js/src/backend-app.js'
+                   'bundles/jahllerartlas/js/src/controller/backend-controller.js'
+                   'bundles/jahllerartlas/js/src/model/manager/piece-manager.js'
+                   output='js/compiled/backend.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}

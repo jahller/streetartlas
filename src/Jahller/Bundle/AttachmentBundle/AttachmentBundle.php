@@ -2,7 +2,6 @@
 
 namespace Jahller\Bundle\AttachmentBundle;
 
-
 use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\Bundle\Bundle;

@@ -7,13 +7,26 @@ services:
         tags:
           - { name: monolog.logger, channel: jahller }
 
+    jahller.artlas.helper.form:
+        class: Jahller\Bundle\ArtlasBundle\Service\FormHelper
+
     jahller.artlas.manager.piece:
         class: Jahller\Bundle\ArtlasBundle\Document\Manager\PieceManager
         arguments:
             - @doctrine_mongodb.odm.document_manager
 
+    jahller.artlas.manager.city:
+        class: Jahller\Bundle\ArtlasBundle\Document\Manager\CityManager
+        arguments:
+            - @doctrine_mongodb.odm.document_manager
+
     jahller.artlas.repository.piece:
         class: Jahller\Bundle\ArtlasBundle\Document\Repository\PieceRepository
+        arguments:
+            - @doctrine_mongodb.odm.document_manager
+
+    jahller.artlas.repository.city:
+        class: Jahller\Bundle\ArtlasBundle\Document\Repository\CityRepository
         arguments:
             - @doctrine_mongodb.odm.document_manager
 
@@ -24,3 +37,8 @@ services:
         arguments:
             - @jahller.attachment.manager.image
             - @jahller.artlas.manager.piece
+
+    jahller.artlas.service.error_preparer:
+        class: Jahller\Bundle\ArtlasBundle\Service\ErrorPreparer
+        arguments:
+            - @translator

@@ -1,5 +1,8 @@
 jahller_artlas:
     resource: "@JahllerArtlasBundle/Resources/config/routing.yml"
 
+jahller_attachment:
+    resource: "@AttachmentBundle/Resources/config/routing.yml"
+
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

@@ -2,36 +2,30 @@
 
 namespace Jahller\Bundle\ArtlasBundle\Document;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Type;
 
 /**
- * @MongoDB\Document
+ * @MongoDB\EmbeddedDocument
+ * @ExclusionPolicy("ALL")
  */
 class Tag
 {
     /**
      * @MongoDB\Id
+     * @Expose
+     * @Type("string")
      */
     protected $id;
 
     /**
      * @MongoDB\String
+     * @Expose
+     * @Type("string")
      */
     protected $title;
-
-    /**
-     * @MongoDB\ReferenceMany(targetDocument="Jahller\Bundle\ArtlasBundle\Document\Piece")
-     */
-    protected $pieces;
-
-    /**
-     * General constructor
-     */
-    public function __construct()
-    {
-        $this->pieces = new ArrayCollection();
-    }
 
     /**
      * @return mixed
@@ -55,49 +49,6 @@ class Tag
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * @param Piece $piece
-     * @return $this
-     */
-    public function addPiece(Piece $piece)
-    {
-        if (!$this->hasPiece($piece)) {
-            $this->pieces->add($piece);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Piece $piece
-     * @return $this
-     */
-    public function removePiece(Piece $piece)
-    {
-        if ($this->hasPiece($piece)) {
-            $this->pieces->removeElement($piece);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPieces()
-    {
-        return $this->pieces;
-    }
-
-    /**
-     * @param Piece $piece
-     * @return mixed
-     */
-    public function hasPiece(Piece $piece)
-    {
-        return $this->pieces->contains($piece);
     }
 
 }

@@ -8,6 +8,17 @@ imports:
 parameters:
     locale: en
 
+fos_rest:
+    body_converter:
+        enabled: true
+    service:
+        exception_handler:    fos_rest.view.exception_wrapper_handler
+    view:
+        # only relevant when using the JMS serializer for serialization
+        exception_wrapper_handler:  null
+        view_response_listener: 'force'
+    disable_csrf_role: ROLE_API
+
 framework:
     #esi:             ~
     #translator:      { fallbacks: ["%locale%"] }
@@ -30,6 +41,9 @@ framework:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
+
+sensio_framework_extra:
+    request: { converters: true }
 
 # Twig Configuration
 twig:
@@ -61,6 +75,7 @@ doctrine_mongodb:
             mappings:
                 JahllerArtlasBundle: { type: annotation, dir: Document/ }
             metadata_cache_driver: array # array, apc, xcache, memcache
+    auto_generate_hydrator_classes: true
 
 # Swiftmailer Configuration
 swiftmailer:

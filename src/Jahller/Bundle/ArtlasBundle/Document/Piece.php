@@ -6,29 +6,42 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Validator\Constraints as Assert;
 use Jahller\Bundle\AttachmentBundle\Document\Image;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * @MongoDB\Document
+ * @ExclusionPolicy("ALL")
  */
 class Piece
 {
     /**
      * @MongoDB\Id
+     * @Expose
+     * @Type("string")
      */
     protected $id;
 
     /**
      * @MongoDB\Boolean
+     * @Expose
+     * @Type("boolean")
      */
     protected $active;
 
     /**
-     * @MongoDB\ReferenceMany(targetDocument="Jahller\Bundle\ArtlasBundle\Document\Tag", cascade={"all"})
+     * @MongoDB\EmbedMany(targetDocument="Jahller\Bundle\ArtlasBundle\Document\Tag")
+     * @Expose
+     * @Type("ArrayCollection<Jahller\Bundle\ArtlasBundle\Document\Tag>")
      */
     protected $tags;
 
     /**
      * @MongoDB\EmbedOne(targetDocument="Jahller\Bundle\AttachmentBundle\Document\Image")
+     * @Expose
+     * @Type("Jahller\Bundle\AttachmentBundle\Document\Image")
      */
     protected $image;
 
