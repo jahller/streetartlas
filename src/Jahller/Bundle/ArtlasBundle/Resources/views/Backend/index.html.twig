@@ -11,52 +11,53 @@
 
 {% block body %}
     <div id="backend" ng-app="backend" ng-cloak>
+        <div ng-controller="BackendController">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Active</th>
+                    <th>Image Latitude</th>
+                    <th>Image Longitude</th>
+                    <th>Tags</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="(key, piece) in pieceManager.pieces | orderBy:orderAttribute:orderDirection">
+                    <td>{[ piece.id ]}</td>
+                    <td>
+                        <i class="fa fa-check" ng-class="{'fa-check': piece.active, 'fa-times': !piece.active}"></i>
+                    </td>
+                    <td>{[ piece.image.exif_data.latitude ]}</td>
+                    <td>{[ piece.image.exif_data.longitude ]}</td>
+                    <td>
+                        <span ng-repeat="(tagKey, tag) in piece.tags" class="badge">
+                            {[ tag.title ]}
+                        </span>
+                    </td>
+                    <td>
+                        <img src="{[ actions.getImageURL(piece.id, 'icon') ]}" alt="{[ key ]}" />
+                    </td>
+                    <td>
+                        <button ng-click="actions.deletePiece($event, piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Delete Piece">
+                            <i class="fa fa-lg fa-fw fa-trash"></i>
+                        </button>
+                        <button ng-click="actions.editPiece(piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Edit Piece">
+                            <i class="fa fa-lg fa-fw fa-pencil"></i>
+                        </button>
+                        <button ng-click="actions.togglePieceActive(piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Activate/Deactivate Piece">
+                            <i ng-class="{'fa-toggle-on': piece.active, 'fa-toggle-off': !piece.active}" class="fa fa-lg fa-fw"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-        <table class="table table-striped" ng-controller="BackendController">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Active</th>
-                <th>Image Latitude</th>
-                <th>Image Longitude</th>
-                <th>Tags</th>
-                <th>Image</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="(key, piece) in pieceManager.pieces | orderBy:orderAttribute:orderDirection">
-                <td>{[ piece.id ]}</td>
-                <td>
-                    <i class="fa fa-check" ng-class="{'fa-check': piece.active, 'fa-times': !piece.active}"></i>
-                </td>
-                <td>{[ piece.image.exif_data.latitude ]}</td>
-                <td>{[ piece.image.exif_data.longitude ]}</td>
-                <td>
-                    <span ng-repeat="(tagKey, tag) in piece.tags" class="badge">
-                        {[ tag.title ]}
-                    </span>
-                </td>
-                <td>
-                    <img src="{[ actions.getImageURL(piece.id, 'icon') ]}" alt="{[ key ]}" />
-                </td>
-                <td>
-                    <button ng-click="actions.deletePiece(piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Delete Piece">
-                        <i class="fa fa-lg fa-trash"></i>
-                    </button>
-                    <button ng-click="actions.showPieceModal(piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Edit Piece">
-                        <i class="fa fa-lg fa-pencil"></i>
-                    </button>
-                    <button ng-click="actions.togglePieceActive(piece)" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Activate/Deactivate Piece">
-                        <i ng-class="{'fa-toggle-on': piece.active, 'fa-toggle-off': !piece.active}" class="fa fa-lg"></i>
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            {{ include('JahllerArtlasBundle:Piece:update_modal.html.twig') }}
+        </div>
     </div>
-
-    {{ include('JahllerArtlasBundle:Piece:update_modal.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}
@@ -67,10 +68,10 @@
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
-    {% javascripts 'bundles/jahllerartlas/js/src/model/repository/piece-repository.js'
-                   'bundles/jahllerartlas/js/src/backend-app.js'
-                   'bundles/jahllerartlas/js/src/controller/backend-controller.js'
-                   'bundles/jahllerartlas/js/src/model/manager/piece-manager.js'
+    {% javascripts 'bundles/jahllerartlas/js/src/piece/piece-repository.js'
+                   'bundles/jahllerartlas/js/src/piece/piece-manager.js'
+                   'bundles/jahllerartlas/js/src/backend/backend-app.js'
+                   'bundles/jahllerartlas/js/src/backend/controller/backend-controller.js'
                    output='js/compiled/backend.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

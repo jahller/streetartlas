@@ -11,6 +11,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PieceType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -23,6 +27,9 @@ class PieceType extends AbstractType
         $builder->addEventSubscriber(new PieceTypeSubscriber());
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
@@ -30,8 +37,11 @@ class PieceType extends AbstractType
         ));
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        return 'piece';
+        return '';
     }
 }

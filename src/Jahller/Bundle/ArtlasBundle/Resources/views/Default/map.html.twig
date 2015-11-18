@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StreetArtlas{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'bundles/jahllerartlas/css/*' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div id="navigation">
+            <button id="createPiece" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="Add Piece">
+                <i class="fa fa-lg fa-paint-brush"></i>
+            </button>
+            <a href="https://github.com/jahller/streetartlas" target="_blank" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="Show on GitHub">
+                <i class="fa fa-lg fa-github-alt"></i>
+            </a>
+        </div>
+
+        <div id="map"></div>
+    </div>
+
+    {{ include('JahllerArtlasBundle:Piece:new.html.twig', { 'form': form }) }}
+    {{ include('JahllerArtlasBundle:Piece:show_modal.html.twig') }}
+{% endblock %}
+
+{% block dynamic_javascripts %}
+    <script type="text/javascript">
+        {% if pieceFormHasErrors %}
+            $('#createPieceModal').modal('show');
+        {% endif %}
+
+        function addMarker() {
+            {% for piece in pieces %}
+                {% if piece.image.exifData is defined %}
+                    var marker{{ loop.index }} = new google.maps.Marker({
+                        position: {lat: {{ piece.image.exifData.latitude }}, lng: {{ piece.image.exifData.longitude }}},
+                        map: map,
+                        title: 'Piece {{ loop.index }}',
+                        {% image '@JahllerArtlasBundle/Resources/public/images/marker_red.png' %}
+                            icon: '{{ asset_url }}'
+                        {% endimage %}
+                    });
+
+                    marker{{ loop.index }}.addListener('click', function() {
+                        openPieceDialog('{{ piece.id }}');
+                    });
+                {% endif %}
+            {% endfor %}
+        }
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@JahllerArtlasBundle/Resources/public/js/*' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTy4gSGEtYMLZiUQ0M04-oWTm5746BFOI&callback=initMap" async defer></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+{% endblock %}

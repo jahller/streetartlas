@@ -50,46 +50,35 @@ class PieceRestController extends FOSRestController
 
     /**
      * @Rest\Put("/pieces/{piece}", name="put_piece")
-     * @ParamConverter(
-     *  "piece",
-     *  class="Jahller\Bundle\ArtlasBundle\Document\Piece",
-     *  options={"id"="piece"}
-     * )
      *
      * @param Request $request
-     * @param Piece $piece
+     * @param $piece
      * @return Response
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    public function putPieceAction(Request $request, Piece $piece)
+    public function putPieceAction(Request $request, $piece)
     {
-        $this->get('logger')->info('### HAS TAGS ' . count($piece->getTags()));
-
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Put piece: Access denied');
         }
 
+        /**
+         * @var Piece $piece
+         */
+        $piece = $this->get('jahller.artlas.repository.piece')->find($piece);
+
         $form = $this->createForm(new PieceType(), $piece, array('method' => 'PUT'));
 
-        $this->get('logger')->info('### HAS TAGS 2 ' . count($piece->getTags()));
-        $this->get('logger')->info('### REQUEST ' . $request->getContent());
-
         $form->handleRequest($request);
-
-        $this->get('logger')->info('### HAS TAGS 3 ' . count($piece->getTags()));
 
         if ($form->isValid()) {
             $this
                 ->get('jahller.artlas.manager.piece')
                 ->update($piece);
 
-            $this->get('logger')->info('### HAS TAGS 4 ' . count($piece->getTags()));
-
             return $piece;
         }
 
-        $this->get('logger')->info('### ERRORS ' . $form->getErrors(true));
-
-        return $this->handleView($this->view($form->getErrors(true, true), 500));
+        return $this->handleView($this->view($form->getErrors(), 400));
     }
 }

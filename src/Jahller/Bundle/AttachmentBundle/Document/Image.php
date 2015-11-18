@@ -17,7 +17,7 @@ use JMS\Serializer\Annotation\Type;
 class Image
 {
     /**
-     * @MongoDB\Id(strategy="auto")
+     * @MongoDB\Id
      * @Expose
      * @Type("string")
      */
@@ -66,19 +66,19 @@ class Image
      */
     protected $mimeType;
 
-    protected $replacedPath = null;
-
-    /**
-     * @Assert\Type("bool")
-     */
-    protected $removalFlag = false;
-
     /**
      * @MongoDB\EmbedOne(targetDocument="Jahller\Bundle\AttachmentBundle\Document\ExifData")
      * @Expose
      * @Type("Jahller\Bundle\AttachmentBundle\Document\ExifData")
      */
     protected $exifData;
+
+    protected $replacedPath = null;
+
+    /**
+     * @Assert\Type("bool")
+     */
+    protected $removalFlag = false;
 
     /**
      * @return mixed
@@ -190,13 +190,10 @@ class Image
 
     /**
      * @param mixed $removalFlag
-     * @return $this
      */
     public function setRemovalFlag($removalFlag)
     {
         $this->removalFlag = $removalFlag;
-
-        return $this;
     }
 
     /**
@@ -209,13 +206,10 @@ class Image
 
     /**
      * @param null $replacedPath
-     * @return $this
      */
     public function setReplacedPath($replacedPath)
     {
         $this->replacedPath = $replacedPath;
-
-        return $this;
     }
 
     /**

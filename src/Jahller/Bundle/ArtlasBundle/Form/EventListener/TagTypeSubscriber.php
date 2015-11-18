@@ -7,30 +7,19 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PieceTypeSubscriber implements EventSubscriberInterface
+class TagTypeSubscriber implements EventSubscriberInterface
 {
     /**
      * @param FormEvent $event
      */
     public function preSetData(FormEvent $event)
     {
-        $piece = $event->getData();
+        $tag = $event->getData();
         $form = $event->getForm();
 
-        if ($piece && null !== $piece->getId()) {
+        if ($tag && null !== $tag->getId()) {
             $form
                 ->add('id')
-                ->add('active')
-                ->add('image', new ImageType())
-            ;
-        } else {
-            $form
-                ->add('imageFile', 'file', array(
-                    'required' => true
-                ))
-                ->add('save', 'submit', array(
-                    'label' => 'Create Piece'
-                ))
             ;
         }
     }

@@ -15,18 +15,8 @@ services:
         arguments:
             - @doctrine_mongodb.odm.document_manager
 
-    jahller.artlas.manager.city:
-        class: Jahller\Bundle\ArtlasBundle\Document\Manager\CityManager
-        arguments:
-            - @doctrine_mongodb.odm.document_manager
-
     jahller.artlas.repository.piece:
         class: Jahller\Bundle\ArtlasBundle\Document\Repository\PieceRepository
-        arguments:
-            - @doctrine_mongodb.odm.document_manager
-
-    jahller.artlas.repository.city:
-        class: Jahller\Bundle\ArtlasBundle\Document\Repository\CityRepository
         arguments:
             - @doctrine_mongodb.odm.document_manager
 

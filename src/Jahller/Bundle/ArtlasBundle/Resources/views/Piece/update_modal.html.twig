@@ -11,10 +11,36 @@
     </div>
 
     <div class="modal-body">
+        <img src="{[ actions.getImageURL(currentPiece.id, 'lightbox') ]}" alt="{[ key ]}" />
 
+        <div class="tag-list">
+            <ul id="tag-fields-list">
+                <li ng-repeat="(key, tag) in currentPiece.tags" class="badge">
+                    {[ tag.title ]} <i class="fa fa-times fa-fw" ng-click="actions.removeTag($event, currentPiece, key)"></i>
+                </li>
+            </ul>
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">
+                <i class="fa fa-tags"></i>
+            </span>
+            <input type="text" class="form-control" ng-keypress="actions.addTag($event, currentPiece)" aria-describedby="basic-addon1" placeholder="Add new tag" />
+        </div>
+
+        <form class="form-inline">
+            <div class="form-group">
+                <label>Active</label>
+            </div>
+
+            <button ng-click="actions.togglePieceActive(currentPiece)" type="button" class="btn btn-warning">
+                <i ng-class="{'fa-toggle-on': currentPiece.active, 'fa-toggle-off': !currentPiece.active}" class="fa fa-lg fa-fw"></i>
+            </button>
+        </form>
     </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" ng-click="actions.savePiece(currentPiece)">Save</button>
     </div>
 {% endblock %}

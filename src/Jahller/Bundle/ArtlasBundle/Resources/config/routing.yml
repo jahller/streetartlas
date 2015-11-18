@@ -2,6 +2,10 @@ jahller_artlas_homepage:
     path:     /home
     defaults: { _controller: JahllerArtlasBundle:Default:index }
 
+jahller_artlas_map:
+    path:     /map
+    defaults: { _controller: JahllerArtlasBundle:Default:index }
+
 jahller_artlas_info:
     path:     /info
     defaults: { _controller: JahllerArtlasBundle:Default:info }
@@ -21,10 +25,6 @@ jahller_artlas_piece_update:
     defaults: { _controller: JahllerArtlasBundle:Piece:update }
     options:
         expose: true
-
-#jahller_artlas_piece_delete:
-#    path:     /piece/delete/{id}
-#    defaults: { _controller: JahllerArtlasBundle:Piece:delete }
 
 jahller_artlas_piece_toggle_activate:
     path:     /piece/toggle_activate/{id}

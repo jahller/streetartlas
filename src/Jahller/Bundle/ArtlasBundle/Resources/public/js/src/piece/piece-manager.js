@@ -17,17 +17,21 @@ angular.module('piece.manager', ['piece.repository'])
         return null;
       },
 
-      queryPieces: function() {
+      queryPieces: function(callback) {
         var self = this;
         PieceRepository.queryAll({},
           /* OnSuccess */
           function (pieces) {
             self.pieces = pieces;
             self._masterPieces = angular.copy(self.pieces);
+
+            if ('function' == typeof callback) {
+              callback();
+            }
           },
           /* OnError */
           function (errorObject) {
-            /*seedpm.flash('error', 'Fetch pieces failed');*/
+            console.log('ERROR on piece query: ', errorObject.data);
           }
         )
       },
@@ -44,20 +48,20 @@ angular.module('piece.manager', ['piece.repository'])
             self._masterPieces.splice(masterIndex, 1);
             self.pieces.splice(pieceIndex, 1);
 
-            /*seedpm.flash('success', 'Piece successfully deleted');*/
+            /**
+             * @todo show piece delete success message
+             */
           },
-
           /* OnError */
           function(errorObject) {
-            console.log(errorObject.data);
-            /*seedpm.flash('error', 'Error on deleting a piece');*/
+            console.log('ERROR on piece delete: ', errorObject.data);
           }
         );
       },
 
-      save: function(piece) {
+      save: function(piece, callback) {
         if (piece.id) {
-          this._update(piece);
+          this._update(piece, callback);
         } else {
           //this._create(project);
         }
@@ -69,10 +73,10 @@ angular.module('piece.manager', ['piece.repository'])
        * @param piece
        * @private
        */
-      _update: function(piece) {
+      _update: function(piece, callback) {
         var self = this;
 
-        PieceRepository.save(piece,
+        PieceRepository.update(piece,
           /**
            * OnSuccess
            */
@@ -83,16 +87,19 @@ angular.module('piece.manager', ['piece.repository'])
             self._masterPieces[masterIndex] = angular.copy(newPiece);
             self.pieces[pieceIndex] = newPiece;
 
-            //seedpm.flash('success', 'Piece successfully updated');
-          },
+            /**
+             * @todo show piece update success message
+             */
 
+            if ('function' == typeof callback) {
+              callback();
+            }
+          },
           /**
            * OnError
            */
           function(errorObject) {
-            console.log(errorObject.data);
-            //ErrorHandler.handleErrors(errorObject.data);
-            //seedpm.flash('error', 'An error occurred while updating the piece');
+            console.log('ERROR on piece update: ', errorObject.data);
           }
         );
       }

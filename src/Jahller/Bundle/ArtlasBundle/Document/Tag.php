@@ -3,13 +3,14 @@
 namespace Jahller\Bundle\ArtlasBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Type;
 
 /**
  * @MongoDB\EmbeddedDocument
- * @ExclusionPolicy("ALL")
+ * @ExclusionPolicy("all")
  */
 class Tag
 {
@@ -22,6 +23,7 @@ class Tag
 
     /**
      * @MongoDB\String
+     * @Assert\NotBlank()
      * @Expose
      * @Type("string")
      */
@@ -37,10 +39,13 @@ class Tag
 
     /**
      * @param mixed $title
+     * @return $this
      */
     public function setTitle($title)
     {
         $this->title = $title;
+
+        return $this;
     }
 
     /**

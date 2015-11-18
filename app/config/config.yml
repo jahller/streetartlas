@@ -12,7 +12,7 @@ fos_rest:
     body_converter:
         enabled: true
     service:
-        exception_handler:    fos_rest.view.exception_wrapper_handler
+        exception_handler: fos_rest.view.exception_wrapper_handler
     view:
         # only relevant when using the JMS serializer for serialization
         exception_wrapper_handler:  null

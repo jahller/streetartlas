@@ -60,18 +60,6 @@ class PieceController extends Controller
         ));
     }
 
-    /*public function deleteAction(Request $request, $id)
-    {
-        $piece = $this->get('jahller.artlas.repository.piece')->find($id);
-        $this->get('jahller.artlas.manager.piece')->delete($piece);
-
-        $params = $this->getRefererParams($request);
-
-        return $this->redirect($this->generateUrl(
-            $params['_route']
-        ));
-    }*/
-
     public function toggleActivateAction(Request $request, $id)
     {
         /**

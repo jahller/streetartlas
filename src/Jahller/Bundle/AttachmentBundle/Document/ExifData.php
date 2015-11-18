@@ -2,7 +2,6 @@
 
 namespace Jahller\Bundle\AttachmentBundle\Document;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -20,6 +19,7 @@ class ExifData
 {
     /**
      * @MongoDB\String
+     * @Assert\NotBlank()
      * @Expose
      * @Type("string")
      */
@@ -27,6 +27,7 @@ class ExifData
 
     /**
      * @MongoDB\String
+     * @Assert\NotBlank()
      * @Expose
      * @Type("string")
      */
@@ -34,10 +35,13 @@ class ExifData
 
     /**
      * @param mixed $latitude
+     * @return $this
      */
     public function setLatitude($latitude)
     {
         $this->latitude = $latitude;
+
+        return $this;
     }
 
     /**
@@ -50,10 +54,13 @@ class ExifData
 
     /**
      * @param mixed $longitude
+     * @return $this
      */
     public function setLongitude($longitude)
     {
         $this->longitude = $longitude;
+
+        return $this;
     }
 
     /**

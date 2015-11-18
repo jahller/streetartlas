@@ -1,36 +1,35 @@
 <?php
 
-namespace Jahller\Bundle\ArtlasBundle\Form\EventListener;
+namespace Jahller\Bundle\AttachmentBundle\Form\EventListener;
 
-use Jahller\Bundle\AttachmentBundle\Form\ImageType;
+use Jahller\Bundle\AttachmentBundle\Form\ExifDataType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PieceTypeSubscriber implements EventSubscriberInterface
+class ImageTypeSubscriber implements EventSubscriberInterface
 {
     /**
      * @param FormEvent $event
      */
     public function preSetData(FormEvent $event)
     {
-        $piece = $event->getData();
+        $image = $event->getData();
         $form = $event->getForm();
 
-        if ($piece && null !== $piece->getId()) {
+        if ($image && null !== $image->getId()) {
             $form
                 ->add('id')
-                ->add('active')
-                ->add('image', new ImageType())
+                ->add('path')
+                ->add('name')
+                ->add('size')
+                ->add('extension')
+                ->add('mimeType')
+                ->add('exifData', new ExifDataType())
             ;
         } else {
             $form
-                ->add('imageFile', 'file', array(
-                    'required' => true
-                ))
-                ->add('save', 'submit', array(
-                    'label' => 'Create Piece'
-                ))
+                ->add('file')
             ;
         }
     }
