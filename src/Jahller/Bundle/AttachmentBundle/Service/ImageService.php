@@ -6,7 +6,7 @@ use Jahller\Bundle\AttachmentBundle\Document\ExifData;
 use Jahller\Bundle\AttachmentBundle\Document\Image;
 use Monolog\Logger;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 class ImageService
 {
@@ -70,13 +70,13 @@ class ImageService
     }
 
     /**
-     * Process Uploaded File and retrieve Latitude and Longitude from image EXIF data
+     * Process File and retrieve Latitude and Longitude from image EXIF data
      *
      * @param Image $image
-     * @param UploadedFile $file
+     * @param File $file
      * @return Image
      */
-    public function processExifData(Image $image, UploadedFile $file)
+    public function processExifData(Image $image, File $file)
     {
         $exif = exif_read_data($file, 0, true);
         $gps = $exif['GPS'];

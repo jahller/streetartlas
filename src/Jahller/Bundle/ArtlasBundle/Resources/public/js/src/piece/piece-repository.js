@@ -3,7 +3,7 @@ angular.module('piece.repository', ['ngResource'])
     return {
 
       /**
-       * @param piece
+       * @param piece Object
        * @returns {{}}
        * @private
        */
@@ -28,9 +28,9 @@ angular.module('piece.repository', ['ngResource'])
       },
 
       /**
-       * @param params
-       * @param successCallback
-       * @param errorCallback
+       * @param params array
+       * @param successCallback function
+       * @param errorCallback function
        * @returns {*}
        */
       queryAll: function (params, successCallback, errorCallback) {
@@ -47,9 +47,9 @@ angular.module('piece.repository', ['ngResource'])
       },
 
       /**
-       * @param piece
-       * @param successCallback
-       * @param errorCallback
+       * @param piece Object
+       * @param successCallback function
+       * @param errorCallback function
        * @returns {*}
        */
       remove: function(piece, successCallback, errorCallback) {
@@ -65,9 +65,29 @@ angular.module('piece.repository', ['ngResource'])
       },
 
       /**
-       * @param piece
-       * @param successCallback
-       * @param errorCallback
+       * @param piece Object
+       * @param successCallback function
+       * @param errorCallback function
+       * @returns {*}
+       */
+      create: function(piece, successCallback, errorCallback) {
+        var repository = $resource(
+          decodeURIComponent(Routing.generate('post_piece')),
+          {},
+          {
+            create: {
+              method:'POST'
+            }
+          }
+        );
+
+        return repository.create(piece, successCallback, errorCallback);
+      },
+
+      /**
+       * @param piece Object
+       * @param successCallback function
+       * @param errorCallback function
        * @returns {*}
        */
       update: function(piece, successCallback, errorCallback) {

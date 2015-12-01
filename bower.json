@@ -1,0 +1,26 @@
+{
+  "name": "streetartlas",
+  "version": "1",
+  "authors": [
+    "Jan Heller <@jahller>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/Jahller/Bundle/ArtlasBundle/Resources/public/vendor"
+  ],
+  "dependencies": {
+    "jquery": "2.1.4",
+    "jquery-ui": "1.11.4",
+    "jquery-file-upload": "9.11.2",
+    "blueimp-load-image": "1.14.0",
+    "bootstrap": "3.3.5",
+    "angular": "1.4.8",
+    "angular-strap": "2.3.6",
+    "angular-resource": "1.4.8",
+    "angular-animate": "1.4.8",
+    "fontawesome": "4.5.0"
+  }
+}

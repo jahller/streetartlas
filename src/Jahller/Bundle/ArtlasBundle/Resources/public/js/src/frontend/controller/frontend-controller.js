@@ -17,7 +17,6 @@ var FrontendController = function($scope, $timeout, PieceManager) {
     },
 
     initPieces: function (callback) {
-      var self = this;
       $scope.pieceManager = PieceManager;
       $scope.pieceManager.queryPieces(callback);
     },
@@ -38,18 +37,30 @@ var FrontendController = function($scope, $timeout, PieceManager) {
       return Routing.generate('jahller_piece_image_preview', {'id': id, 'size': size})
     },
 
-    showPieceModal: function() {
-      $('#updatePieceModal').modal('show');
+    showPieceModal: function(piece) {
+      $scope.currentPiece = piece;
+      var self = this;
+      var showPieceModal = $('#showPieceModal');
+      showPieceModal.find('.modal-body .image img').each(function() {
+        $(this)
+          .attr('src', self.getImageURL(piece.id, 'lightbox'))
+          .attr('alt', piece.key)
+        ;
+      });
+      showPieceModal.modal('show');
     },
 
     hidePieceModal: function() {
-      $('#updatePieceModal').modal('hide');
+      $('#showPieceModal').modal('hide');
     },
 
     savePiece: function(piece) {
       var self = this;
-      $scope.pieceManager.save(piece, function() {
-        self.hidePieceModal();
+      $scope.pieceManager.save(piece, function(newPiece) {
+        $('#createPieceModal').modal('hide');
+        $timeout(function() {
+          $('.piece .image[data-id="' + newPiece.id + '"] img').attr('src', self.getImageURL(newPiece.id, 'thumb'));
+        }, 1000);
       });
     },
 
@@ -77,10 +88,25 @@ var FrontendController = function($scope, $timeout, PieceManager) {
           icon.removeClass('fa-question').addClass('fa-times');
         }, 3000)
       }
+    },
+
+    showEye: function($event) {
+      $($event.target).parent().find('i').show();
+    },
+
+    hideEye: function($event) {
+      $($event.target).parent().find('i').hide();
+    },
+
+    addFile: function($event) {
+      var files = $event.target.files;
+      $scope.pieceManager.newPiece.imageName = files[0].name;
+      $scope.pieceManager.newPiece.imageMimeType = files[0].type;
     }
   };
 
   $scope.actions.init();
 };
-FrontendController.$inject = ['$scope', '$timeout', 'PieceManager'];
+
+FrontendController.$inject = ['$scope', '$timeout', 'PieceManager', '$http', '$filter', '$window'];
 frontendApp.controller('FrontendController', FrontendController);

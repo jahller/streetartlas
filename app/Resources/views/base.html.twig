@@ -3,6 +3,14 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
+        {% stylesheets  'bower/bootstrap/dist/css/bootstrap.css'
+                        'bower/fontawesome/css/font-awesome.css'
+                        'bundles/jahllerartlas/css/bootstrap-theme.css'
+                        'bundles/jahllerartlas/css/streetartlas.css'
+                        output='css/compiled/all.css' filter='cssrewrite'
+        %}
+            <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+        {% endstylesheets %}
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
@@ -31,6 +39,31 @@
         </div>
 
         {% block body %}{% endblock %}
+
+        {% javascripts  'bower/jquery/dist/jquery.js'
+                        'bower/jquery-ui/jquery-ui.js'
+                        'bower/angular/angular.js'
+                        'bower/angular-resource/angular-resource.js'
+                        'bower/angular-animate/angular-animate.js'
+                        'bundles/jahllerartlas/js/src/services/jahller-directives.js'
+                        'bower/bootstrap/dist/js/bootstrap.js'
+                        'bower/angular-strap/dist/angular-strap.js'
+                        'bower/blueimp-load-image/js/load-image.js'
+                        'bower/blueimp-canvas-to-blob/js/canvas-to-blob.js'
+                        'bower/jquery-file-upload/js/jquery.iframe-transport.js'
+                        'bower/jquery-file-upload/js/jquery.fileupload.js'
+                        'bower/jquery-file-upload/js/jquery.fileupload-process.js'
+                        'bower/jquery-file-upload/js/jquery.fileupload-image.js'
+                        'bower/jquery-file-upload/js/jquery.fileupload-audio.js'
+                        'bower/jquery-file-upload/js/jquery.fileupload-video.js'
+                        'bower/jquery-file-upload/js/jquery.fileupload-validate.js'
+                        'bower/jquery-file-upload/js/jquery.fileupload-angular.js'
+                        'bundles/jahllerartlas/js/maps.js'
+                        'bundles/fosjsrouting/js/router.js'
+                        output='js/compiled/all.js' filter='?uglifyjs2'
+        %}
+            <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
         {% block javascripts %}{% endblock %}
         {% block dynamic_javascripts %}{% endblock %}
     </body>

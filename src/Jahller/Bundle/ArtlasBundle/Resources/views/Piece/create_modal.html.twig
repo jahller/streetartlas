@@ -1,0 +1,45 @@
+{% extends 'modal.html.twig' %}
+
+{% block modal_id %}createPieceModal{% endblock %}
+
+{% block modal_content %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+            Update Piece
+        </h4>
+    </div>
+
+    <div class="modal-body">
+        <div class="image">
+            <img ng-src="{[ pieceManager.newPiece.imageFile ]}" alt="Loading" />
+        </div>
+
+        <div class="input-group">
+            <span class="btn btn-default btn-file">
+                <i class="fa fa-picture-o"></i> Select piece foto <input type="file" name="file" fileread="pieceManager.newPiece.imageFile" custom-on-change="actions.addFile">
+            </span>
+            <span class="label label-default">{[ pieceManager.newPiece.imageName ]}</span>
+        </div>
+
+        <div class="tag-list">
+            <ul id="tag-fields-list">
+                <li ng-repeat="(key, tag) in pieceManager.newPiece.tags" class="badge">
+                    {[ tag.title ]} <i class="fa fa-times fa-fw" ng-click="actions.removeTag($event, pieceManager.newPiece, key)"></i>
+                </li>
+            </ul>
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">
+                <i class="fa fa-tags"></i>
+            </span>
+            <input type="text" class="form-control" ng-keypress="actions.addTag($event, pieceManager.newPiece)" aria-describedby="basic-addon1" placeholder="Add tag" />
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" ng-click="actions.savePiece(pieceManager.newPiece)">Save</button>
+    </div>
+{% endblock %}

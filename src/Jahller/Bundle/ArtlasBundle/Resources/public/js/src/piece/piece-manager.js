@@ -4,6 +4,12 @@ angular.module('piece.manager', ['piece.repository'])
       _masterPieces: [],
       pieces: [],
       piecesLoaded: false,
+      newPiece: {
+        imageFile: null,
+        imageName: null,
+        imageMimeType: null,
+        tags: []
+      },
 
       findPieceById: function (pieceId, pieceCollection) {
         var filtered =  pieceCollection.filter(function(currentPiece) {
@@ -63,14 +69,15 @@ angular.module('piece.manager', ['piece.repository'])
         if (piece.id) {
           this._update(piece, callback);
         } else {
-          //this._create(project);
+          this._create(piece, callback);
         }
       },
 
       /**
        * Update Action
        *
-       * @param piece
+       * @param piece Object
+       * @param callback function
        * @private
        */
       _update: function(piece, callback) {
@@ -90,7 +97,6 @@ angular.module('piece.manager', ['piece.repository'])
             /**
              * @todo show piece update success message
              */
-
             if ('function' == typeof callback) {
               callback();
             }
@@ -102,6 +108,40 @@ angular.module('piece.manager', ['piece.repository'])
             console.log('ERROR on piece update: ', errorObject.data);
           }
         );
+      },
+
+      /**
+       * Create Action
+       *
+       * @param piece Object
+       * @param callback function
+       * @private
+       */
+      _create: function(piece, callback) {
+        var self = this;
+
+        PieceRepository.create(piece,
+          /**
+           * OnSuccess
+           */
+          function(newPiece, headers) {
+            self._masterPieces.push(angular.copy(newPiece));
+            self.pieces.push(newPiece);
+
+            /**
+             * @todo show piece create success message
+             */
+            if ('function' == typeof callback) {
+              callback(newPiece);
+            }
+          },
+          /**
+           * OnError
+           */
+          function(errorObject) {
+            console.log('ERROR on piece create: ', errorObject.data);
+          }
+        )
       }
     };
   });

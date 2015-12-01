@@ -4,6 +4,7 @@ namespace Jahller\Bundle\ArtlasBundle\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Jahller\HttpFoundation\File\ApiUploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Jahller\Bundle\AttachmentBundle\Document\Image;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -145,10 +146,10 @@ class Piece
     }
 
     /**
-     * @param mixed $imageFile
+     * @param ApiUploadedFile $imageFile
      * @return $this
      */
-    public function setImageFile($imageFile)
+    public function setImageFile(ApiUploadedFile $imageFile)
     {
         $this->imageFile = $imageFile;
 
@@ -156,7 +157,7 @@ class Piece
     }
 
     /**
-     * @return mixed
+     * @return ApiUploadedFile
      */
     public function getImageFile()
     {

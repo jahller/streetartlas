@@ -2,13 +2,6 @@
 
 {% block title %}StreetArtlas Backend{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets 'bundles/jahllerartlas/css/*' filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-{% endblock %}
-
 {% block body %}
     <div id="backend" ng-app="backend" ng-cloak>
         <div ng-controller="BackendController">
@@ -62,10 +55,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '@JahllerArtlasBundle/Resources/public/js/*' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
     {% javascripts 'bundles/jahllerartlas/js/src/piece/piece-repository.js'

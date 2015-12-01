@@ -6,12 +6,24 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">
-            Piece details
+            Piece
         </h4>
     </div>
 
     <div class="modal-body">
+        <div class="image">
+            {% image '@JahllerArtlasBundle/Resources/public/images/ghostery.png' %}
+                <img src="{{ asset_url }}" alt="Loading" />
+            {% endimage %}
+        </div>
 
+        <div class="tag-list">
+            <ul id="tag-fields-list">
+                <li ng-repeat="(key, tag) in currentPiece.tags" class="badge">
+                    {[ tag.title ]}
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div class="modal-footer">

@@ -2,13 +2,6 @@
 
 {% block title %}StreetArtlas{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets 'bundles/jahllerartlas/css/*' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-{% endblock %}
-
 {% block body %}
     <div id="content" class="frontend" ng-app="frontend" ng-cloak  ng-controller="FrontendController">
         <div id="navigation">
@@ -31,10 +24,11 @@
 
         <div id="pieces">
             <div class="piece" ng-repeat="(key, piece) in pieceManager.pieces | orderBy:orderAttribute:orderDirection">
-                <div class="image" data-id="{[ piece.id ]}">
+                <div class="image" ng-click="actions.showPieceModal(piece)" data-id="{[ piece.id ]}">
                     {% image '@JahllerArtlasBundle/Resources/public/images/ghostery.png' %}
-                        <img src="{{ asset_url }}" alt="Loading" />
+                        <img src="{{ asset_url }}" alt="Loading" ng-mouseenter="actions.showEye($event)" ng-mouseleave="actions.hideEye($event)" />
                     {% endimage %}
+                    <i class="fa fa-eye"></i>
                 </div>
                 <div class="tag-list">
                     <span ng-repeat="(tagKey, tag) in piece.tags" class="badge">
@@ -43,25 +37,24 @@
                 </div>
             </div>
         </div>
+
+        {{ include('JahllerArtlasBundle:Piece:show_modal.html.twig') }}
+        {{ include('JahllerArtlasBundle:Piece:create_modal.html.twig') }}
     </div>
 
-    {{ include('JahllerArtlasBundle:Piece:new.html.twig', { 'form': form }) }}
-    {{ include('JahllerArtlasBundle:Piece:show_modal.html.twig') }}
+    {#{{ include('JahllerArtlasBundle:Piece:new.html.twig', { 'form': form }) }}#}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '@JahllerArtlasBundle/Resources/public/js/*' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
-    {% javascripts 'bundles/jahllerartlas/js/src/piece/piece-repository.js'
-                   'bundles/jahllerartlas/js/src/piece/piece-manager.js'
-                   'bundles/jahllerartlas/js/src/frontend/frontend-app.js'
-                   'bundles/jahllerartlas/js/src/frontend/controller/frontend-controller.js'
-    output='js/compiled/frontend.js' %}
-    <script src="{{ asset_url }}"></script>
+    {% javascripts  'bundles/jahllerartlas/js/src/piece/piece-repository.js'
+                    'bundles/jahllerartlas/js/src/piece/piece-manager.js'
+                    'bundles/jahllerartlas/js/src/frontend/frontend-app.js'
+                    'bundles/jahllerartlas/js/src/frontend/controller/frontend-controller.js'
+                    output='js/compiled/frontend.js'
+    %}
+        <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}

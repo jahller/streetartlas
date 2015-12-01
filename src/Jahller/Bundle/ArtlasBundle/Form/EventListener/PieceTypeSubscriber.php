@@ -26,7 +26,7 @@ class PieceTypeSubscriber implements EventSubscriberInterface
         } else {
             $form
                 ->add('imageFile', 'file', array(
-                    'required' => true
+                    'required' => true,
                 ))
                 ->add('save', 'submit', array(
                     'label' => 'Create Piece'
