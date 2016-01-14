@@ -272,10 +272,6 @@ class Image
     {
         $this->file = $file;
 
-        if (null === $this->file) {
-            return;
-        }
-
         if ($this->file instanceof UploadedFile) {
             $this->name = $this->file->getClientOriginalName();
         }

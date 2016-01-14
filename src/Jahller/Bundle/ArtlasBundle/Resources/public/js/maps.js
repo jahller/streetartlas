@@ -12,17 +12,6 @@ function initMap() {
   });
 }
 
-$(function () {
-  $('#fileupload').fileupload({
-    dataType: 'json',
-    done: function (e, data) {
-      $.each(data.result.files, function (index, file) {
-        $('<p/>').text(file.name).appendTo(document.body);
-      });
-    }
-  });
-});
-
 function openPieceDialog(pieceId) {
   var showPieceModal = $('#showPieceModal');
   showPieceModal.find('.modal-body').load(

@@ -7,7 +7,7 @@
 /app/phpunit.xml
 /bin/
 /composer.phar
-/vendor/
+/vendor/*
 /web/bundles/*
 /web/images/*
 /web/coverage.html/*

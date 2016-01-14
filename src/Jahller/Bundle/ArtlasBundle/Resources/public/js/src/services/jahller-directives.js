@@ -16,14 +16,16 @@ angular.module('jahller.directives').directive('fileread', [function () {
       fileread: '='
     },
     link: function (scope, element, attributes) {
-      element.bind('change', function (changeEvent) {
+      element.bind('change', function(changeEvent) {
         var reader = new FileReader();
-        reader.onload = function (loadEvent) {
-          scope.$apply(function () {
+        reader.onload = function(loadEvent) {
+          scope.$apply(function() {
             scope.fileread = loadEvent.target.result;
           });
         };
-        reader.readAsDataURL(changeEvent.target.files[0]);
+        if ('undefined' !== typeof changeEvent.target.files[0]) {
+          reader.readAsDataURL(changeEvent.target.files[0]);
+        }
       });
     }
   }

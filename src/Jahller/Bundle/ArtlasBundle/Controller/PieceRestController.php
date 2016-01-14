@@ -9,13 +9,12 @@ use Jahller\Bundle\ArtlasBundle\Document\Piece;
 use Jahller\Bundle\ArtlasBundle\Event\PieceAddImageEvent;
 use Jahller\Bundle\ArtlasBundle\Event\PieceEvents;
 use Jahller\Bundle\ArtlasBundle\Form\PieceType;
+use Jahller\Bundle\ArtlasBundle\Service\PieceUploadService;
 use Jahller\Bundle\AttachmentBundle\Document\Image;
-use Jahller\HttpFoundation\File\ApiUploadedFile;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * Class PieceRestController
@@ -97,25 +96,16 @@ class PieceRestController extends FOSRestController
      */
     public function postPieceAction(Request $request)
     {
-        $piece = new Piece();
-        $form = $this->createForm(new PieceType(), $piece, array('method' => 'POST'));
-
-        $data = $request->request->all();
-
-        /* Process API Upload Request */
-        if ($request->request->has('imageFile')) {
-            $imageFile = $request->request->get('imageFile');
-            $imageName = $request->request->get('imageName');
-            $imageMimeType = $request->request->get('imageMimeType');
-
-            $data['imageFile'] = new ApiUploadedFile($imageFile, $imageName, $imageMimeType);
-            /**
-             * Remove extra fields after processing the uploaded image
-             */
-            unset($data['imageName']);
-            unset($data['imageMimeType']);
+        /**
+         * @var $data PieceUploadService
+         */
+        $pieceUploadService = $this->get('jahller.artlas.service.piece_upload');
+        $data = $pieceUploadService->processUpload($request);
+        if ($pieceUploadService->hasErrors()) {
+            return $this->handleView($this->view(array('global' => $pieceUploadService->getErrors()), 400));
         }
 
+        $form = $this->createForm(new PieceType(), null, array('method' => 'POST'));
         $form->submit($data);
 
         if ($form->isValid()) {
@@ -133,13 +123,14 @@ class PieceRestController extends FOSRestController
 
             /** @var \Symfony\Component\HttpFoundation\File\File $imageFile */
             $imageFile = $piece->getImageFile();
+            $imageService = $this->get('jahller.attachment.service.image');
 
             /** @var Image $image */
             $image = $this->get('jahller.attachment.service.image')->processExifData(new Image(), $imageFile);
+            if ($imageService->hasErrors()) {
+                return $this->handleView($this->view(array('imageFile' => $imageService->getErrors()), 400));
+            }
 
-            /**
-             * @todo add image processing to AttachmentBundle\ImageService
-             */
             $image->processFile($imageFile);
 
             /** @var $eventDispatcher EventDispatcherInterface */

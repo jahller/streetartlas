@@ -28,6 +28,11 @@ services:
             - @jahller.attachment.manager.image
             - @jahller.artlas.manager.piece
 
+    jahller.artlas.service.piece_upload:
+        class: Jahller\Bundle\ArtlasBundle\Service\PieceUploadService
+        arguments:
+            - @logger
+
     jahller.artlas.service.error_preparer:
         class: Jahller\Bundle\ArtlasBundle\Service\ErrorPreparer
         arguments:

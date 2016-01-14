@@ -11,6 +11,20 @@ angular.module('piece.manager', ['piece.repository'])
         tags: []
       },
 
+      hasImage: function(piece) {
+        return null !== piece.imageFile && null !== piece.imageName && null !== piece.imageMimeType;
+      },
+
+      removeImage: function(piece, callback) {
+        piece.imageFile = null;
+        piece.imageName = null;
+        piece.imageMimeType = null;
+
+        if ('function' == typeof callback) {
+          callback();
+        }
+      },
+
       findPieceById: function (pieceId, pieceCollection) {
         var filtered =  pieceCollection.filter(function(currentPiece) {
           return pieceId == currentPiece.id;

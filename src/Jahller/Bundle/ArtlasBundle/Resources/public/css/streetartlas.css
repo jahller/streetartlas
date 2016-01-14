@@ -9,9 +9,13 @@ label.required:before {
 .btn-file {
   position: relative;
   overflow: hidden;
+  width: 100%;
+  border-radius: 0 0 3px 3px;
 }
-.btn-file i {
+.btn-file i.fa-picture-o {
   margin-right: 20px;
+  margin-top: 3px;
+  float: left;
 }
 .btn-file input[type=file] {
   position: absolute;
@@ -28,9 +32,27 @@ label.required:before {
   cursor: inherit;
   display: block;
 }
+.btn-file .text-wrapper {
+  float: left;
+}
+.input-group.file .file-name {
+  float: right;
+  background-color: #f388ae;
+  padding: 0 5px;
+  color: #fff;
+  max-width: 75%;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.input-group.file i.fa-times {
+  margin-top: 3px;
+  margin-left: 10px;
+  float: right;
+}
 #content {
   width: 100%;
   height: 100%;
+  display: table;
 }
 #content.frontend {
   padding: 20px;
@@ -38,7 +60,7 @@ label.required:before {
   background: url('/bundles/jahllerartlas/images/bg1.png') repeat-x bottom left;
 }
 #content.frontend .btn-default {
-  color: #f388ae;
+  color: #ed588d;
   background-color: #fee3e9;
   background-image: none;
   border-color: transparent;
@@ -86,8 +108,14 @@ label.required:before {
 .modal-body {
   text-align: center;
 }
+.modal-body .input-group {
+  width: 100%;
+}
+.modal-body .image {
+  background-color: #333;
+}
 .modal-body .image img {
-  max-width: 680px;
+  max-width: 668px;
   max-height: 500px;
 }
 button,
@@ -124,13 +152,14 @@ button,
   height: 165px;
   cursor: pointer;
   position: relative;
+  background-color: transparent;
 }
 #pieces .piece .image i {
   display: none;
   position: absolute;
   left: 5px;
   top: 5px;
-  color: #f388ae;
+  color: #ed588d;
   background-color: #fee3e9;
   padding: 3px 5px;
   border-radius: 3px;

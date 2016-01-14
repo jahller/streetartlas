@@ -102,6 +102,10 @@ var FrontendController = function($scope, $timeout, PieceManager) {
       var files = $event.target.files;
       $scope.pieceManager.newPiece.imageName = files[0].name;
       $scope.pieceManager.newPiece.imageMimeType = files[0].type;
+    },
+
+    resetImage: function() {
+      $('.image img').attr('src', null);
     }
   };
 

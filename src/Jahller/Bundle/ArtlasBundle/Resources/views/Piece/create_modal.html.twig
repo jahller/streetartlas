@@ -17,9 +17,16 @@
 
         <div class="input-group">
             <span class="btn btn-default btn-file">
-                <i class="fa fa-picture-o"></i> Select piece foto <input type="file" name="file" fileread="pieceManager.newPiece.imageFile" custom-on-change="actions.addFile">
+                <i class="fa fa-picture-o"></i> <span class="text-wrapper">Select piece foto</span> <input type="file" name="file" fileread="pieceManager.newPiece.imageFile" custom-on-change="actions.addFile"/>
             </span>
-            <span class="label label-default">{[ pieceManager.newPiece.imageName ]}</span>
+        </div>
+
+        <div class="input-group" ng-if="pieceManager.hasImage(pieceManager.newPiece)">
+            <span class="input-group-btn" ng-click="pieceManager.removeImage(pieceManager.newPiece, actions.resetImage())">
+                <i class="fa fa-times"></i>
+            </span>
+            <input type="text" class="form-control" aria-describedby="basic-addon1" placeholder="File name" readonly="true" value="{[ pieceManager.newPiece.imageName ]}" />
+            {#<span class="file-name">{[ pieceManager.newPiece.imageName ]}</span>#}
         </div>
 
         <div class="tag-list">

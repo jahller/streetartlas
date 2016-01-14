@@ -6,17 +6,26 @@
     <div id="content" class="frontend" ng-app="frontend" ng-cloak  ng-controller="FrontendController">
         <div id="navigation">
             <div class="element">
-                <button id="createPiece" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="Add Piece">
+                <button
+                    id="createPiece" type="button" class="btn btn-default"
+                    data-toggle="tooltip" data-placement="right" title="Add Piece"
+                >
                     <i class="fa fa-lg fa-fw fa-paint-brush"></i>
                 </button>
             </div>
             <div class="element">
-                <a href="{{ path('jahller_artlas_map') }}" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="Switch to map view">
+                <a
+                    href="{{ path('jahller_artlas_map') }}" class="btn btn-default"
+                    data-toggle="tooltip" data-placement="right" title="Switch to map view"
+                >
                     <i class="fa fa-lg fa-fw fa-map"></i>
                 </a>
             </div>
             <div class="element">
-                <a href="https://github.com/jahller/streetartlas" target="_blank" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="Show on GitHub">
+                <a
+                    href="https://github.com/jahller/streetartlas" target="_blank" class="btn btn-default"
+                    data-toggle="tooltip" data-placement="right" title="Show on GitHub"
+                >
                     <i class="fa fa-lg fa-fw fa-github-alt"></i>
                 </a>
             </div>
@@ -25,8 +34,11 @@
         <div id="pieces">
             <div class="piece" ng-repeat="(key, piece) in pieceManager.pieces | orderBy:orderAttribute:orderDirection">
                 <div class="image" ng-click="actions.showPieceModal(piece)" data-id="{[ piece.id ]}">
-                    {% image '@JahllerArtlasBundle/Resources/public/images/ghostery.png' %}
-                        <img src="{{ asset_url }}" alt="Loading" ng-mouseenter="actions.showEye($event)" ng-mouseleave="actions.hideEye($event)" />
+                    {% image '@JahllerArtlasBundle/Resources/public/images/bg_2.png' %}
+                        <img
+                            src="{{ asset_url }}" alt="Loading"
+                            ng-mouseenter="actions.showEye($event)" ng-mouseleave="actions.hideEye($event)"
+                        />
                     {% endimage %}
                     <i class="fa fa-eye"></i>
                 </div>
@@ -41,8 +53,6 @@
         {{ include('JahllerArtlasBundle:Piece:show_modal.html.twig') }}
         {{ include('JahllerArtlasBundle:Piece:create_modal.html.twig') }}
     </div>
-
-    {#{{ include('JahllerArtlasBundle:Piece:new.html.twig', { 'form': form }) }}#}
 {% endblock %}
 
 {% block javascripts %}
