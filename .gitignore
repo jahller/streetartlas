@@ -8,8 +8,11 @@
 /bin/
 /composer.phar
 /vendor/*
+/web/bower/*
 /web/bundles/*
 /web/images/*
+/web/images/pieces/*
+!web/images/pieces/.gitkeep
 /web/coverage.html/*
 /web/css/*
 /web/js/*
